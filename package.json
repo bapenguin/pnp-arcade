@@ -1,0 +1,12 @@
+{
+  "name": "pnp-arcade",
+  "private": true,
+  "description": "P&P Enterprises Classic Arcade: the hub and site-wide tools. Each game in games/ has its own package.json.",
+  "type": "module",
+  "scripts": {
+    "hub-assets": "node tools/hub-assets.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.0"
+  }
+}

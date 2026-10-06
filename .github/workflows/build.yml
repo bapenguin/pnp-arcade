@@ -1,0 +1,65 @@
+name: Build and deploy
+
+# Builds every game, puts the hub on top, and on main publishes the lot to GitHub Pages
+# (https://bapenguin.github.io/pnp-arcade/). Every run also attaches the ready-to-upload
+# site as a downloadable artifact ("pnp-arcade-web") for hosting anywhere else.
+#
+# Site layout:  /index.html + /assets/  (the hub, plain files)
+#               /games/<slug>/          (each game's own build output)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: games/*/package-lock.json
+      # Each game's converted assets and data are committed, so CI doesn't need the
+      # raw legacy media, ffmpeg or the upscaler.
+      - name: Build Massacre of the Fairies
+        working-directory: games/mof
+        run: npm ci && npm run build
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/games
+          cp index.html _site/
+          cp -r assets _site/
+          cp -r games/mof/dist _site/games/mof
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pnp-arcade-web
+          path: _site
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: _site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

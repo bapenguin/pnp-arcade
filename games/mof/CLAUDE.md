@@ -2,7 +2,8 @@
 
 Browser port (TypeScript + Vite + Canvas 2D + Web Audio) of a 2004 VB6/DirectX 7 game by
 P&P Enterprises (the repo owner's own game). All seven port phases are done, plus a
-modernization pass. **Live:** https://bapenguin.github.io/MoF/ (deployed from `main`).
+modernization pass. It's part of the P&P Classic Arcade repo: see the root `CLAUDE.md`.
+**Live:** https://bapenguin.github.io/pnp-arcade/games/mof/.
 
 - `README.md`: controls, running, deploying.
 - `PLAN.md`: original port plan, the bugs found in the VB code, and a status log of
@@ -64,13 +65,13 @@ skips those keys).
 
 ## Deploying
 
-- Push to `main` → `.github/workflows/build.yml` builds, deploys to GitHub Pages, and attaches
-  the `dist/` folder as a `mof-web` artifact (for hosting elsewhere).
-- Repo Settings → Pages → Source must stay **GitHub Actions**. "Deploy from a branch" serves
-  the raw source and shows a blank page.
-- To redeploy without changes: `git commit --allow-empty -m "Trigger GitHub Pages deploy"` and push.
+- **Where it deploys from:** the arcade's root workflow (`.github/workflows/build.yml` at
+  the repo root) builds this folder and publishes it at `/games/mof/`. See the root
+  `CLAUDE.md` for the details.
+- **The old standalone repo:** `bapenguin/MoF` (tag `mof-standalone-v1`) is the archived
+  version.
 - Offline play/installing (service worker) needs HTTPS. Pages has it.
-- For another server: upload the contents of `dist/` (or the `mof-web` zip) to any folder.
+- For another server: upload the contents of `dist/` to any folder.
 
 ## Testing notes (for Claude)
 

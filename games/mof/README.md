@@ -52,7 +52,8 @@ npm run data     # legacy/*.txt scenarios -> data/*.json
 
 ## Play online
 
-**https://bapenguin.github.io/MoF/**, deployed from `main` by GitHub Actions. It can be installed
+**https://bapenguin.github.io/pnp-arcade/games/mof/**, part of the P&P Enterprises Classic
+Arcade and deployed from `main` by GitHub Actions. It can be installed
 as an app (the Install button, or *Add to Home Screen* on iPhone/iPad) and then plays offline.
 
 Massacre setups can be shared: build one in Massacre Mode and press **Share this massacre**
@@ -71,9 +72,9 @@ Upload the **contents** of `dist/` to any folder on the server. Paths are relati
 it works at the site root or in a subfolder like `https://example.com/games/mof/`.
 It must be served over `http(s)://`; opening `dist/index.html` straight from disk won't work.
 
-Every push to `main` builds the site on GitHub (`.github/workflows/build.yml`) and
-publishes it to GitHub Pages. Each workflow run also has a `mof-web` artifact to
-download: the same `dist/` folder as a zip, for your own server.
+Every push to `main` builds the whole arcade on GitHub (the root `.github/workflows/build.yml`)
+and publishes it to GitHub Pages. Each workflow run also has a `pnp-arcade-web` artifact to
+download: the whole site as a zip, with this game in `games/mof/`.
 
 Offline play and installing need **HTTPS** (browsers only allow service workers on
 secure sites); over plain `http://` the game still works, just without those.

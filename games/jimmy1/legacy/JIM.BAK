@@ -1,0 +1,1023 @@
+start:
+CLS
+win$ = "Mb o3  l16 ccc l1e l16 ccc l1 f"
+jump$ = "o1 l64 cdefgab o2cdefgab o3cdefgab o4cdefgab o5cdefg o1 l1 d"
+death$ = "o3 Mn l4c l8 cl1 f p2 l4 c l8fl1a"
+star$ = "mB t140 o4 l2 cf o5 l1c o4 l4 b-ag o5 l3 f l1 c o4 l4 b-ag o5 l3 f l1 c l4 b-ab- l1 g"
+CLS
+PRINT TAB(25); "Welcome to . . .   "
+COLOR 2, 0, 2
+ PRINT "                    ‹‹‹‹‹‹‹‹‹  ‹  ‹‹     ‹‹  ‹‹     ‹‹  ‹‹   ‹‹"
+ PRINT "                        €€     €  € ﬂ‹ ‹ﬂ €  € ﬂ‹ ‹ﬂ €    ﬂ‹ﬂ "
+ PRINT "                        €€     €  €   €   €  €   €   €     € "
+ PRINT "                    €€  €€  INTERACTIVE"
+ PRINT "                    ﬂﬂﬂﬂﬂﬂ"
+COLOR 7, 0, 2
+PLAY star$
+SLEEP
+F = 1
+10
+shield = 0
+armor = 0
+WEAPON = 0
+MONEY = 0
+TIME = 0
+NOMO = 0
+charm = 0
+leave = 0
+rope$ = "False"
+chainsaw$ = "False"
+woodpcs$ = "false"
+CLS
+
+BEGIN:
+CLS
+   PRINT "JIMMY ENTERS THE HALL PRESS"
+   PRINT "x to go left"
+   PRINT "y to go right"
+   PRINT "Press Q to Quit"
+IF F = 1 THEN GOTO 1
+IF F = 2 THEN GOTO 2
+1 INPUT move$
+
+   IF move$ = "X" THEN GOSUB LEFT
+   IF move$ = "Y" THEN GOSUB y
+ 
+   IF move$ = "Q" THEN GOSUB FINI
+   GOTO 10
+   F = 2
+20
+   GOTO 10
+2
+30 CLS
+PRINT "Jimmy enters a cave"
+   PRINT "press X to go down"
+   PRINT "press Y to go back"
+    INPUT move$
+    IF move$ = "X" THEN GOSUB X
+    IF move$ = "Y" THEN GOTO 10
+y:
+        PRINT "you moved to the right"
+        SLEEP 3
+        GOTO 30
+X:
+        IF TIME = 9 THEN GOSUB castle:
+        PRINT "AAAAAAAAAAAAAAAAAAH!!!"
+        PRINT "oops wrong move"
+ PLAY death$
+ SLEEP 5
+        GOTO 10
+LEFT:
+        IF TIME = 9 THEN GOSUB DOWN:
+        PRINT "Jimmy moves to the left"
+        SLEEP 3
+        CLS
+        PRINT "JIMMY confronts a lizard"
+        PRINT "press 1. to attack"
+        PRINT "press 2. to talk"
+        PRINT "press 3. to run"
+19002       INPUT move$
+
+       IF move$ = "1" THEN GOSUB One
+       IF move$ = "2" THEN GOSUB Two
+       IF move$ = "3" THEN GOSUB Three
+       IF move$ <> "1" AND move$ <> "2" AND move$ <> "3" THEN GOTO 19002
+
+One:
+   CLS
+   PRINT "Since Jimmy doesn't have a weapon, he picks up a stick off the ground"
+   PRINT "But it's not a stick it's a snake.  The snake bites Jimmy in the head"
+   PRINT "Jimmy has Died."
+   PLAY death$
+   SLEEP 10
+   GOTO 10
+
+Two:
+  CLS
+  PRINT "JIMMY says, 'hello little lizard, how are you?'"
+  SLEEP 3
+  PRINT "The lizard says, 'I am fine, why are you here? '"
+  SLEEP 3
+  PRINT "JIMMY says ,' I don't know but I want to get out of here.'"
+  SLEEP 3
+  PRINT "The Lizard says,' Go to the town of Canen and see Bob.'"
+  SLEEP 3
+  PRINT "'How do I get there?' Jimmy asked."
+  SLEEP 3
+  PRINT "'Turn Left at the River'Replied the Lizard, and with that, he vanished into a   cloud of smoke."
+  SLEEP 3
+  PRINT "Press ENTER to continue."
+  SLEEP
+  GOTO 100
+Three:
+CLS
+ PRINT " Jimmy starts to run but runs through the wall and falls 50 stories to his death"
+ PLAY death$
+ SLEEP 10
+ GOTO 10
+99 PRINT "Jimmy runs back to the stairwell"
+   SLEEP 5
+100 CLS
+    IF TIME > 1 THEN GOTO BEGIN:
+    PRINT "YOU ARE STANDING ALONE ON A STAIRWELL"
+    PRINT "TO GO UP PRESS 1"
+    PRINT "TO GO DOWN AND LEAVE THE CASTLE PRESS 2"
+1324  INPUT move$
+    IF TIME > 1 THEN GOTO BEGIN:
+    IF move$ = "1" THEN GOSUB up
+    IF move$ = "2" THEN GOSUB DOWN
+    IF move$ <> "1" AND move$ <> "2" THEN GOTO 1324
+
+up:
+CLS
+PRINT "JIMMY goes up the stairs."
+PRINT "He sees a knife on the ground and takes it."
+WEAPON = 1
+PRINT "HE goes down the stairs and leaves the castle"
+SLEEP 8
+GOSUB DOWN
+DOWN:
+5 CLS
+ PRINT "JIMMY leaves the castle and goes down the road"
+ PRINT "JIMMY sees a hobbit"
+ PRINT "press 1 to attack"
+ PRINT "press 2 to talk"
+ PRINT "press 3 to run"
+ PRINT "press 4 to see your weapons and Items"
+ PRINT "Quit Game - press Q"
+   INPUT move$
+   IF move$ = "1" THEN GOSUB die
+   IF move$ = "2" THEN GOSUB talk
+   IF move$ = "3" THEN GOTO 99
+   IF move$ = "4" THEN GOSUB itemlist
+   IF move$ = "Q" THEN GOSUB FINI
+   IF move$ <> "1" AND move$ <> "2" AND move$ <> "3" THEN GOTO 5
+
+die:
+ IF WEAPON = 1 THEN GOSUB killem
+ GOSUB yerdead
+killem:
+     CLS
+     PRINT "JIMMY pulls out his knife and lunges at his foe"
+     PRINT "but he hobbit moves and JIMMY falls flat on his face!"
+     SLEEP 3
+     PLAY jump$
+     PRINT "The hobbit starts laughing so hard he has a heart attack and dies!!"
+     PRINT "Jimmy says comedy is dangerous you know"
+     PLAY win$
+     SLEEP
+     GOSUB menu
+
+yerdead:
+     PRINT "JIMMY has no weapon"
+     PRINT "Jimmy pulls out a nothing because he has nothing so he can't do nothing"
+     PRINT "the hobbit shoots a arrow through Jimmy"
+     PLAY death$
+     SLEEP 5
+     GOTO 10
+talk:
+     PRINT "Hello, Hello, is any body home McFly"
+     PRINT "the hobbit does not answer Jimmy gets mad"
+     SLEEP 5
+     GOTO die
+menu:
+     CLS
+     PRINT "PRESS 1. TO SEARCH THE HOBBITS BODY"
+     PRINT "PRESS 2. to leave for the town"
+5678 INPUT menu$
+     IF menu$ = "1" THEN GOSUB search
+     IF menu$ = "2" THEN GOSUB leave
+     GOTO 5678
+search:
+     PRINT "JIMMY searches the hobbits body and finds a crossbow"
+     PRINT "he takes it.  He also finds $311."
+     WEAPON = 2
+     MONEY = 455
+     SLEEP 5
+leave:
+2234 CLS
+     PRINT "Jimmy heads off for town"
+     PRINT "he comes to a fork in the road there is a river on his right"
+     PRINT "press 1. to keep going forword"
+     PRINT "press 2. to go left"
+     PRINT "press 3. to go take a dip"
+     PRINT "press 4. to see your items and money"
+           INPUT menu$
+                 IF menu$ = "1" THEN GOSUB forword
+                 IF menu$ = "2" THEN GOSUB GO
+                 IF menu$ = "3" THEN GOSUB forword
+                 IF menu$ = "4" THEN GOSUB itemlist
+           GOTO 2234
+forword:
+     PRINT "Jimmy looks into the river. He sees a fish. As he reaches out to grab it, the    ground beneath his feet gives way. He falls into the river and is pulled under     by the undertow."
+     SLEEP
+     GOTO 10
+GO:
+4756 CLS
+     IF TIME >= 5 THEN GOSUB intown:
+     PRINT "Jimmy takes the road left, and is soon at the gates to the town. There is a      guard standing in the way."
+     PRINT "Press 1 to attack"
+     PRINT "Prees 2 to talk"
+     PRINT "Press 3 to run"
+     PRINT "Press 4 to see a list of your items and weapon"
+          INPUT move$
+               IF move$ = "1" THEN GOSUB attack
+               IF move$ = "2" THEN GOSUB Chat
+               IF move$ = "3" THEN GOSUB ahhh
+               IF move$ = "4" THEN GOSUB itemlist
+          GOTO 4756
+
+ahhh:
+     PRINT "Jimmy tries to run, but"
+attack:
+     PRINT "The guard pulls out an M16 and points it at Jimmy's head."
+     SLEEP 2
+     m16$ = "ms o1 l32 ccccccccccccCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+     PLAY m16$
+     PRINT "Ouch! Boy that has to hurt!  You are DEAD!!"
+     SLEEP
+     GOTO 10
+
+Chat:
+IF NOMO = 1 THEN GOTO intown:
+IF NOMO = 0 THEN
+PRINT "THE TOLL IS 11 DOLLARS"
+SLEEP 3
+END IF
+IF MONEY < 11 THEN
+  PRINT "'You don't have enough money!!"
+  GOTO attack:
+IF MONEY >= 11 THEN MONEY = MONEY - 11
+IF MONEY >= 11 THEN NOMO = 1
+GOSUB town
+END IF
+
+town:
+COLOR 2, 0, 0
+PRINT "Here's the eleven bucks"
+COLOR 7, 0, 0
+PRINT "OK YOU MAY PASS INTO THE TOWN"
+SLEEP 5
+
+intown:
+     CLS
+     PRINT "YOU ARE STANDING IN CENTER SQUARE CANEN "
+     PRINT "PRESS 1. TO GO TO THE WEAPON SHOP"
+     PRINT "PRESS 2. TO GO TO THE ARMOR SHOP"
+     PRINT "PRESS 3. TO GO TO THE BAR."
+     PRINT "PRESS 4. TO TALK TO SOMEONE"
+     PRINT "PRESS 5. TO LEAVE THE TOWN"
+     PRINT "PRESS 6. TO SEE YOUR ITEMS"
+     PRINT "PRESS Q TO QUIT"
+          INPUT choice$
+               IF choice$ = "1" THEN GOSUB weaponshop
+              
+               IF choice$ = "2" THEN GOSUB armorshop
+               IF choice$ = "3" THEN GOSUB bar
+               IF choice$ = "4" THEN GOSUB BOB
+               IF choice$ = "5" THEN GOSUB ExiTown
+               IF choice$ = "6" THEN GOSUB itemlist
+               IF choice$ = "Q" THEN GOSUB FINI
+          GOTO intown:
+
+weaponshop:
+    CLS
+    PRINT "Welcome to the Weapons shop of Canen. How may I help you?"
+    PRINT "1) Sell"
+    PRINT "2) Buy "
+    PRINT "3) Leave"
+    PRINT "4) Show Items   "
+   
+         INPUT choice$
+               IF choice$ = "1" THEN GOSUB sell
+               IF choice$ = "2" THEN GOSUB buy
+               IF choice$ = "3" THEN GOTO intown:
+               IF choice$ = "4" THEN GOSUB itemlist
+               GOTO weaponshop:
+4554 CLS
+     PRINT "You don't HAVE a weapon, genius"
+     SLEEP 5
+     GOTO weaponshop:
+sell:
+    IF WEAPON = 0 THEN GOTO 4554
+    IF WEAPON = 1 THEN v = 50
+    IF WEAPON = 2 THEN v = 100
+    IF WEAPON = 3 THEN v = 150
+    IF WEAPON = 4 THEN v = 350
+12  CLS
+    PRINT "Hmmmmm. I'll give you "; v; "dollars for it.  How 'bout it?(Y/N)"
+    INPUT G$
+    IF G$ = "Y" THEN GOSUB yO
+    IF G$ = "N" THEN GOTO weaponshop:
+    GOTO 12
+yO:
+    PRINT "Alrighty-then! Here you go."
+    WEAPON = 0
+    MONEY = MONEY + v
+    v = 0
+    GOTO weaponshop:
+buy:
+        CLS
+        PRINT "Well, Here's what we have. Anything Interest Ya?"
+        PRINT "              You have $"; MONEY
+        PRINT "         1) Knife...............$100"
+        PRINT "         2) Crossbow............$200"
+        PRINT "         3) Spear...............$300"
+        PRINT "         4) Revolver............$700"
+        PRINT "         5) No, nothing interests me"
+            INPUT buy$
+            IF buy$ = "1" THEN GOSUB Knife
+            IF buy$ = "2" THEN GOSUB Crossbow
+            IF buy$ = "3" THEN GOSUB Spear
+            IF buy$ = "4" THEN GOSUB Revolver
+            IF buy$ = "5" THEN GOTO weaponshop:
+
+Knife:
+     IF MONEY < 100 THEN GOTO 321
+     IF MONEY >= 100 THEN WEAPON = 1 AND MONEY = MONEY - 100
+     GOTO 4321
+Crossbow:
+     IF MONEY < 200 THEN GOTO 321
+     WEAPON = 2
+     MONEY = MONEY - 200
+     GOTO 4321
+Spear:
+     IF MONEY < 300 THEN GOTO 321
+     WEAPON = 3
+     MONEY = MONEY - 300
+     GOTO 4321
+Revolver:
+     IF MONEY < 700 THEN GOTO 321
+     WEAPON = 4
+     MONEY = MONEY - 700
+     GOTO 4321
+321 PRINT "you don't have enough money"
+    GOTO buy:
+4321 PRINT "There you go. Thank you very much."
+    GOTO weaponshop:
+
+
+armorshop:
+CLS
+PRINT "welcome to the armor shop of Canen. How may I help you?"
+PRINT " 1) Buy armor"
+PRINT " 2) Buy a shield"
+PRINT " 3) Sell"
+PRINT " 4) Leave"
+PRINT " 5) See items"
+   INPUT armor$
+   IF armor$ = "1" THEN GOSUB barm
+   IF armor$ = "2" THEN GOSUB buyshield
+   IF armor$ = "3" THEN GOSUB sarm
+   IF armor$ = "4" THEN GOTO intown:
+   IF armor$ = "5" THEN GOSUB itemlist
+   GOTO armorshop:
+90210 PRINT "You're not wearing armor, Einstien"
+      SLEEP 5
+      GOTO armorshop:
+sarm:
+    IF armor = 0 AND shield = 0 THEN GOTO 90210
+    IF armor = 1 THEN av = 25
+    IF armor = 2 THEN av = 150
+    IF shield = 1 THEN sv = 25
+    IF shield = 2 THEN sv = 125
+    IF shield = 3 THEN sv = 475
+    IF armor = 0 THEN GOTO sellshield
+22  CLS
+    PRINT "I'll give you "; av; "dollars for your armor.(Y/N)"
+    INPUT a$
+    IF a$ = "N" THEN GOSUB sellshield
+    IF a$ = "Y" THEN GOTO 4444
+    GOTO 22
+4444  PRINT "Thank you very much."
+    sheild = 0
+    MONEY = MONEY + av
+sellshield:
+    IF shield = 0 THEN GOTO armorshop:
+    PRINT "How 'bout"; sv; "dollars for yer shield?(Y/N)"
+    INPUT b$
+    IF b$ = "N" THEN GOTO armorshop
+    IF b$ = "Y" THEN
+       PRINT "Thank you, kind sir."
+       shield = 0
+       MONEY = MONEY + sv
+    GOTO armorshop
+    END IF
+
+barm:
+    PRINT "Well, what can I help you with today?"
+    PRINT "           Money:  $"; MONEY
+    PRINT "   1) Leather Armor...........$50"
+    PRINT "   2) Chain Mail.............$300"
+    PRINT "   3) This place sucks. I'm gone."
+    INPUT c$
+    IF c$ = "1" THEN GOSUB leather
+    IF c$ = "2" THEN GOSUB mAil
+    IF c$ = "3" THEN GOTO armorshop
+    GOTO barm
+leather:
+    IF MONEY < 50 THEN GOTO 5566
+    armor = 1
+    MONEY = MONEY - 50
+    GOTO 6655
+mAil:
+    IF MONEY < 300 THEN GOTO 5566
+    armor = 2
+    MONEY = MONEY - 300
+    GOTO 6655
+5566 PRINT "Check your pockets, stupid."
+     SLEEP 5
+     GOTO barm:
+6655 PRINT "Very good choice. Will that be cash or an American Express Card?"
+    SLEEP 5
+
+    GOTO armorshop:
+buyshield:
+PRINT "            money = $"; MONEY
+PRINT "   1) Wooden Shield........50"
+PRINT "   2) Iron Shield..........250"
+PRINT "   3) Magic Shield.........950"
+PRINT "   4) Nothing this time"
+
+INPUT t$
+IF t$ = "1" THEN GOSUB wood
+IF t$ = "2" THEN GOSUB iron
+IF t$ = "3" THEN GOSUB Magi
+IF t$ = "4" THEN GOTO armorshop
+
+wood:
+IF MONEY < 50 THEN GOTO 1232
+shield = 1
+MONEY = MONEY - 50
+GOTO 2131
+iron:
+IF MONEY < 250 THEN GOTO 1232
+shield = 2
+MONEY = MONEY - 250
+GOTO 2131
+Magi:
+IF MONEY < 950 THEN GOTO 1232
+shield = 3
+MONEY = MONEY - 950
+1232
+PRINT "Sorry chump either your braindead or your just uh, uh, stupid!!!!"
+SLEEP 5
+GOTO buyshield:
+2131
+PRINT "Thenks a bellion beby heer go yu sheld"
+SLEEP 5
+GOTO armorshop
+
+bar:
+  IF TIME = 7 THEN GOSUB woodcutter
+  IF TIME < 6 OR TIME = 7 OR TIME = 8 THEN
+  PRINT "Jimmy walks into the bar. . ."
+    SLEEP 2
+    PRINT "OUCH!!!!!!!"
+    SLEEP
+    GOTO intown:
+  END IF
+woodcutter:
+        TIME = 6
+        COLOR 3, 0, 0
+        PRINT "Hello, are you the woodcutter? I'm Jimmy"
+        SLEEP 3
+        COLOR 5, 0, 0
+        PRINT "Yeees I am.";
+        SLEEP 1
+        PRINT "May I help you?"
+        SLEEP 2
+        COLOR 3, 0, 0
+        PRINT "Yes, I need you to cut up some trees that are in my way."
+        SLEEP 4
+        COLOR 5, 0, 0
+        PRINT "Unfortunately, I cannot come along. But I CAN give you THIS."
+        SLEEP 4
+        COLOR 7, 0, 0
+        PRINT "The woodcutter gives Jimmy a chainsaw."
+        chainsaw$ = "TRUE"
+        SLEEP 5
+        TIME = 7
+        GOTO intown
+
+BOB:
+  IF TIME = 0 THEN GOSUB firstime
+  IF TIME = 1 OR TIME = 2 THEN GOSUB NONE
+  IF TIME = 3 OR TIME = 4 THEN GOSUB Turnleft
+  IF TIME = 6 THEN GOSUB Saw
+  IF TIME = 8 THEN GOSUB NONE
+  GOTO BOB:
+
+NONE:
+PRINT " No one is around"
+SLEEP
+GOTO intown:
+
+firstime:
+PRINT "Hello Jimmy, I am BOB"
+SLEEP 4
+COLOR 3, 0, 2
+PRINT "How are you BOB.  The lizard said I'd seed youd hered."
+SLEEP 4
+COLOR 7, 0, 0
+PRINT "Ohd reallyd? I mean really?"
+SLEEP 4
+COLOR 3, 0, 2
+PRINT "Where can I get out of here."
+SLEEP 4
+COLOR 7, 0, 0
+PRINT "Go north and you will find your answer. Come and talk to me when you return."
+TIME = 1
+SLEEP
+GOTO intown:
+
+Turnleft:
+       
+        COLOR 3, 0, 0
+        PRINT "Well, Bob. I didn't find what I needed."
+        SLEEP 3
+        COLOR 7, 0, 0
+        PRINT "You must turn left at the tree."
+        TIME = 6
+        SLEEP
+        GOTO intown
+Saw:
+        IF TIME = 1 OR TIME = 2 THEN PRINT " NO ONE IS AROUND"
+        COLOR 3, 0, 0
+        PRINT "Well, Bob, I went to the tree, and turned left, but the path was blocked by a   bunch of fallen trees."
+        SLEEP 4
+        COLOR 7, 0, 0
+        PRINT "Well you have to go that way. Hmmm... ";
+        SLEEP 3
+        PRINT "I know a woodcutter. Maybe you should talk to him. You can probably find him in the bar."
+        SLEEP 5
+        TIME = 7
+        GOTO intown
+ExiTown:
+    PRINT "Jimmy leaves town and heads to the North."
+        SLEEP
+        GOSUB north
+north:
+    CLS
+    PRINT "Jimmy is standing in the middle of the road"
+    PRINT "Press 1 to follow the road North"
+    PRINT "Press 2 to go south, back into the town"
+    PRINT "Press 3 to see the Item list"
+    INPUT c$
+    IF c$ = "1" THEN GOSUB TREE
+    IF c$ = "2" THEN GOTO 4756
+    IF c$ = "3" THEN GOSUB itemlist
+    GOTO north:
+
+TREE:
+    IF TIME = 5 THEN GOSUB MENU2
+    IF TIME >= 5 THEN GOSUB menu3
+    IF TIME = 3 OR TIME = 1 OR TIME = 2 THEN
+         CLS
+         PRINT "Jimmy walks out into a small clearing. There is a lone tree"
+         PRINT "standing in the middle of the clearing. As Jimmy is looking at the tree,"
+         PRINT "out jumps the tree gaurdian."
+         PRINT "Press 1 to fight"
+         PRINT "Press 2 to Run Away"
+         PRINT "Press 3 to see the Item List"
+              INPUT choice$
+              IF choice$ = "1" THEN GOSUB KILLEMGOOD
+              IF choice$ = "2" THEN GOTO north:
+              IF choice$ = "3" THEN GOSUB itemlist
+              GOTO TREE
+              END IF
+
+KILLEMGOOD:
+CLS
+IF WEAPON = 3 THEN
+PRINT "Jimmy keeps his distance from the tree guardian. When the time is right, Jimmy    throws his spear at his enemy. It cuts open the tree guardian's side, spilling blood on the ground."
+END IF
+SLEEP
+
+1024 CLS
+     PRINT "Press 1 to attack again."
+     PRINT "Press 2 to run"
+     PRINT "Press 3 to see your Itemlist"
+          INPUT choice$
+          IF choice$ = "1" THEN GOSUB attackagain
+          IF choice$ = "2" THEN GOSUB ouch
+          IF choice$ = "3" THEN GOSUB itemlist
+          GOTO 1024
+attackagain:
+        IF armor = 0 THEN GOSUB ouch
+        PRINT "The tree guardian pulls the spear out of his side, and throws it back at Jimmy.  Fortunately, the leather armor keeps it from doing too much damage. Jimmy picks up the spear again and charges, full speed, at the tree guardian.";
+        PRINT "This time the spear cuts cleanly through the guardian's tough skin and slices through his heart, and back out on the other side.  The tree guardian falls backwards, and lies motionless."
+        SLEEP
+        TIME = 6
+        GOSUB menu3
+ouch:
+        CLS
+        PRINT "The Guardian pulls the spear out of his side, and hurls it back at Jimmy. Unfortunately, Jimmy is not wearing any armor, so the spear cuts throgh him like a hot knife through butter."
+        PLAY die$
+        SLEEP
+        GOTO 10
+MENU2:
+        CLS
+        PRINT "Jimmy stands alone in the clearing now, the guarian lying dead at the base of the tree."
+        PRINT "Press 1 to search the guardian's body"
+        PRINT "Press 2 to look at the tree"
+        PRINT "Press 3 to go down the road heading left"
+        PRINT "Press 4 to head south on the road, back towards town"
+        PRINT "Press 5 to see a list of your items"
+                INPUT choice$
+                IF choice$ = "1" THEN GOSUB serchguard
+                IF choice$ = "2" THEN GOSUB lookattree
+                IF choice$ = "3" THEN GOSUB LEFTATTREE
+                IF choice$ = "4" THEN GOTO north:
+                IF choice$ = "5" THEN GOSUB itemlist
+                GOTO MENU2:
+menu3:
+        CLS
+        PRINT "Jimmy stands in a small clearing."
+        PRINT "Press 1 to look at the tree"
+        PRINT "Press 2 to go down the road heading west"
+        PRINT "Press 3 to head south towards the town"
+        PRINT "Press 4 to see your items and money."
+        INPUT choice$
+        IF choice$ = "1" THEN GOSUB lookattree
+        IF choice$ = "2" THEN GOSUB LEFTATTREE
+        IF choice$ = "3" THEN GOTO north:
+        IF choice$ = "4" THEN GOSUB itemlist
+        GOTO menu3
+serchguard:
+        IF TIME = 3 THEN
+                PRINT "Jimmy searches the guard. He finds a long piece of rope. He also finds $55"
+                MONEY = MONEY + 50
+                SLEEP 5
+                rope$ = "TRUE"
+                TIME = 6
+                GOTO MENU2:
+        END IF
+        PRINT "Jimmy finds nothing of value."
+        SLEEP 3
+        GOTO MENU2:
+lookattree:
+        PRINT "There is a carving on the tree that says, 'THERE IS ANOTHER TOWN, ON THE OTHER SIDE OF THE CASTLE.  TO GET TO THE SECOND TOWN, YOU MUST GO THROUGH THE CASTLE"
+
+        SLEEP
+        RETURN
+LEFTATTREE:
+        IF TIME <= 6 THEN
+                CLS
+                PRINT "Jimmy walks down the road. Soon he comes to a place where the path is blocked by a fallen tree. gET A CHAINSAW "
+                PRINT "Press 1 to go back"
+                PRINT "Press 2 to see your item list"
+                INPUT choice$
+                IF choice$ = "1" THEN GOTO TREE
+                IF choice$ = "2" THEN GOSUB itemlist
+                GOTO LEFTATTREE
+                END IF
+        IF TIME >= 7 THEN PRINT "Jimmy pulls out his chainsaw, and neatly slices the tree into 500 pieces"
+                   PRINT "Jimmy picks up the wood and shoves it in his pocket"
+                   woodpcs$ = "TRUE"
+                   SLEEP
+        IF TIME = 8 THEN GOSUB FORESTDUDE:
+        TIME = 8
+        GOTO LEFTATTREE:
+
+menu4:
+        CLS
+        PRINT "Jimmy is standing on a road heading East-West."
+        PRINT "Press 1 to go West into the forest"
+        PRINT "Press 2 to go East to the tree"
+        PRINT "Press 3 to see your items"
+             INPUT choice$
+                IF choice$ = "1" THEN GOSUB FORESTDUDE
+                IF choice$ = "2" THEN GOTO TREE
+                IF choice$ = "3" THEN GOSUB itemlist
+                GOTO menu4
+FORESTDUDE:
+TIME = 9
+CLS
+PRINT "Jimmy walks deep into the forest.  It is getting darker and darker but then "
+PRINT " suddenly a bright light appears before him.  It's a flame monster"
+PRINT "press 1) to attack"
+PRINT "press 2) TO run"
+PRINT "press 3) try to talk"
+PRINT "press 4) see your items"
+INPUT for$
+IF for$ = "1" THEN GOSUB dies
+IF for$ = "2" THEN GOSUB dies
+IF for$ = "3" THEN GOSUB hello
+IF for$ = "4" THEN GOSUB itemlist
+GOTO FORESTDUDE
+
+dies:
+PRINT " The fire monster burns Jimmy to a pile of ashes"
+SLEEP
+GOSUB FINI:
+hello:
+CLS
+PRINT " Hello says Jimmy how are you mister monster"
+SLEEP 5
+COLOR 5, 0, 0
+PRINT "I am the fire monster of the forest of Endor.  You are Jimmy are you not?"
+SLEEP 5
+PRINT " That is what I thought.  Well then follow me..........."
+SLEEP 5
+PRINT "Here you are Jimmy back at the castle now go through the Caverns and get to the town"
+PRINT "of Ressest."
+SLEEP 5
+COLOR 7, 0, 0
+PRINT "Thank You"
+SLEEP
+GOSUB CASTLE1:
+
+
+CASTLE1:
+GOTO BEGIN
+
+castle:
+PRINT "Jimmy is now at the edge of a pit.  He uses the rope to climb down."
+TIME = 10
+CLS
+PRINT "The caverns are dark but Jimmy can just faintly make out the door"
+PRINT "press 1 to go through the door"
+PRINT "press 2 to go back"
+PRINT " If you can find the secret password, type it (hint: it rymes with door"
+INPUT Door$
+IF Door$ = "1" THEN GOSUB Door:
+IF Door$ = "2" THEN GOTO X:
+IF Door$ = "FLOOR" THEN GOSUB Bingo:
+GOTO CASTLE1:
+
+Door:
+CLS
+PRINT " Jimmy walks through the door and comes out a sewer grate to a town"
+SLEEP
+TIME = 11
+GOSUB town2:
+
+Bingo:
+PRINT " You found the secret password you find a revolver and magic armor and shield"
+PRINT "plus some mucho dinero"
+SLEEP
+WEAPON = 4
+armor = 3
+shield = 3
+MONEY = MONEY + 1000
+TIME = 11
+
+town2:
+CLS
+PRINT " Jimmy is in the town of Resset "
+PRINT " press 1 to talk"
+PRINT " press 2 to find a magician"
+PRINT " press 3 to go to the bar"
+PRINT " press 4 to take a ferry accros the river"
+INPUT town$
+IF town$ = "1" THEN GOSUB girl:
+IF town$ = "2" THEN GOSUB magic:
+IF town$ = "3" THEN GOSUB bar2:
+IF town$ = "4" THEN GOSUB ferry:
+SLEEP
+
+girl:
+CLS
+IF TIME = 12 THEN GOSUB nobody:
+IF charm = 1 THEN GOSUB nobody:
+PRINT " Jimmy comes across a good looking girl"
+PRINT "press 1 to talk"
+PRINT "press 2 to leave her to be"
+INPUT girl$
+IF girl$ = "1" THEN GOSUB MENU65:
+IF girl$ = "2" THEN GOTO town2:
+SLEEP
+
+nobody:
+PRINT " THERE IS NOBODY AROUND!!"
+
+MENU65:
+CLS
+IF charm = 1 THEN GOSUB hel:
+PRINT "Hello"
+hel:
+PRINT "The girl does not respond"
+PRINT "press 1 to say your pretty"
+PRINT "press 2 to say what's your name"
+PRINT "press 3 to say a poem"
+ SLEEP
+INPUT girl$
+CLS
+IF girl$ = "1" THEN PRINT "your pretty"
+IF girl$ = "1" THEN charm = 1
+IF girl$ = "2" THEN GOSUB Talkin:
+IF girl$ = "3" THEN GOSUB POEM:
+GOTO MENU65
+
+POEM:
+CLS
+PRINT "Roses are uh yellow"
+PRINT "violets are purple"
+PRINT " Sugar is sour"
+PRINT " and so are you"
+CLS
+SLEEP 15
+PRINT "SMACKKKKKKKKKKKKKK!!!!"
+PRINT "ouch says Jimmy"
+SLEEP
+GOTO POEM:
+
+Talkin:
+CLS
+COLOR 4, 0, 0
+PRINT "my name is Leia"
+COLOR 7, 0, 0
+PRINT "My name is Jimmy"
+COLOR 4, 0, 0
+PRINT " That's a nice name"
+PRINT "Why Don't you come to my place"
+PRINT "(y/N)"
+INPUT yes$
+IF yes$ = "y" THEN GOSUB alright:
+IF yes$ = "n" THEN GOTO town2:
+
+alright:
+CLS
+COLOR 7, 0, 0
+PRINT " Jimmy goes back to Leia's place.  Neighbors said they heard some wierd"
+PRINT " Noises but we know what happened!"
+SLEEP
+TIME = 12
+GOTO town2:
+
+magic:
+IF TIME <> 12 THEN PRINT " no magic here"
+IF TIME = 12 THEN
+PRINT " Jimmy comes across a wandering wizard he say he will teach you a trick"
+PRINT "for $250"
+PRINT "(Y/N)"
+INPUT trick$
+IF trick$ = "y" THEN GOSUB trick:
+IF trick$ = "n" THEN GOTO town2:
+END IF
+trick:
+IF MONEY < 250 THEN PRINT "YOu don't have enough"
+IF MONEY >= 250 THEN
+END IF
+PRINT " here is the trick"
+CLS
+
+PRINT " Jimmy learned how to make his oppenent go blind"
+SLEEP
+TIME = 13
+
+bar2:
+CLS
+PRINT " Jimmy enters the bar and sits down.  Soon another man sits down next to"
+PRINT " Jimmy and says You're Jimmy right.  Well I have something you'll need to defeat BOB"
+PRINT " Jimmy says WHAT BOB is my friend.  The man say's no he is not just take the"
+PRINT "ferry cross the mountains and take this. With that the man vanishes"
+PRINT "Jimmy has a magic sword"
+SLEEP
+WEAPON = 5
+TIME = 14
+GOTO town2:
+
+ferry:
+CLS
+PRINT " the ferry man say's the toll is 200 dollars"
+PRINT " pay it (Y\N)"
+INPUT ferry$
+IF ferry$ = "y" THEN GOSUB mountains:
+IF ferry$ = "n" THEN GOTO town2:
+
+mountains:
+IF TIME <> 14 THEN PRINT " I don't know you"
+IF TIME <> 14 THEN GOTO town2:
+IF TIME = 14 THEN
+MONEY = MONEY - 250
+PRINT " Here you are Jimmy at the mountains"
+END IF
+SLEEP
+GOSUB m2:
+
+m2:
+CLS
+PRINT " Jimmy enters the mountains and sees a temple"
+PRINT "press 1 to go forword"
+PRINT " press 2 to camp"
+SLEEP
+INPUT me$
+IF me$ = "1" THEN GOSUB herewe:
+IF me$ = "2" THEN GOSUB camp:
+
+camp:
+CLS
+PRINT " Jimmy makes a big mistake and camps out in the wolves den"
+PRINT " DOTEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!"
+SLEEP
+GOSUB FINI:
+
+herewe:
+CLS
+PRINT "Jimmy goes to the temple and sees BOB standing outside"
+COLOR 6, 0, 0
+PRINT "So Jimmy you want to go home eh! well try to get past me to do it"
+COLOR 7, 0, 0
+PRINT "ALLLLRIGGHTY- then"
+PRINT " press 1 to lunge at BOB with your sword"
+PRINT " press 2 to run"
+INPUT BOB$
+IF BOB$ = "1" THEN GOSUB fall:
+IF BOB$ = "2" THEN GOSUB uhoh:
+
+fall:
+CLS
+PRINT " Jimmy lunges at BOB but BOB disapears.  Jimmy fell down"
+PRINT " press 1 to try again"
+PRINT " press 2 to use magic"
+INPUT more$
+IF more$ = "1" THEN GOSUB yes:
+IF more$ = "2" THEN GOSUB uhoh:
+
+uhoh:
+CLS
+PRINT " BOB kills Jimmy with lightning bolt magic"
+SLEEP
+GOSUB FINI:
+
+yes:
+CLS
+PRINT " Jimmy lunges at BOB but this time knowing wher BOB will disapear to"
+PRINT " He strikes BOB in his stomach"
+PRINT " press  1 to finish him"
+PRINT " press  2 to use magic"
+INPUT final$
+IF final$ = "1" THEN GOTO uhoh:
+IF final$ = "2" THEN GOSUB deathi:
+
+deathi:
+CLS
+PRINT " Jimmy use his magic and......"
+
+PRINT " makes BOB go blind"
+PRINT " Jimmy takes his magic sword and plunges it into BOB's heart"
+PRINT " YOU DID IT"
+PRINT " Hold on there's more left"
+SLEEP
+star$ = "mB t140 o4 l2 cf o5 l1c o4 l4 b-ag o5 l3 f l1 c o4 l4 b-ag o5 l3 f l1 c l4 b-ab- l1 g"
+PLAY star$
+
+
+ending:
+TIME = 15
+CLS
+PRINT " by"
+CLS
+'
+PRINT " NICK PULEO"
+PRINT "                 AND  DAVID PAUL"
+CLS
+PRINT " LOOK FOR JIMMY 2!"
+SLEEP 25
+GOSUB FINI:
+
+
+
+
+
+itemlist:
+   CLS
+   IF WEAPON = 0 THEN weapname$ = "Unarmed"
+   IF WEAPON = 1 THEN weapname$ = "Knife"
+   IF WEAPON = 2 THEN weapname$ = "Crossbow"
+   IF WEAPON = 3 THEN weapname$ = "Spear"
+   IF WEAPON = 4 THEN weapname$ = "Revolver"
+   IF WEAPON = 5 THEN weapname$ = "Magic Sword"
+   PRINT "Weapon:  "; weapname$
+   IF armor = 0 THEN Armname$ = "None"
+   IF armor = 1 THEN Armname$ = "Leather"
+   IF armor = 2 THEN Armname$ = "Chain Mail"
+   IF armor = 3 THEN Armname$ = "Magical"
+   PRINT "Armor:  "; Armname$
+   IF shield = 0 THEN shldname$ = "None"
+   IF shield = 1 THEN shldname$ = "Wooden"
+   IF shield = 2 THEN shldname$ = "Iron"
+   IF shield = 3 THEN shldname$ = "Magical"
+   PRINT "Shield:  "; shldname$
+   PRINT "Money:  $"; MONEY
+   PRINT "Points: $"; TIME
+   PRINT "Items:"
+   IF rope$ = "TRUE" THEN PRINT "Rope"
+   IF chainsaw$ = "TRUE" THEN PRINT "Chainsaw"
+   IF woodpcs$ = "TRUE" THEN PRINT "500 pieces of wood"
+   PRINT "Press ENTER..."
+   SLEEP
+   RETURN
+
+FINI:
+CLS
+IF TIME = 15 THEN PRINT " CONGRATULATIONS"
+INPUT w$
+END
+RETURN
+
+    
+ 
+
