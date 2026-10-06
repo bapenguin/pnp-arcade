@@ -16,7 +16,9 @@ A browser arcade of games Nick Puleo and David Paul (P&P Enterprises) made in th
 |---|---|
 | `index.html`, `assets/` | The hub: plain HTML, no build. `assets/` is made by `npm run hub-assets` from `art/` |
 | `games/mof/` | Massacre of the Fairies (TypeScript + Vite), imported with full history via `git subtree`. Its own `package.json`; it builds and plays on its own |
-| `games/jimmy1/`, `jimmy2/`, `jimmyx/` | The QuickBASIC Jimmy games. Only `legacy/` so far (the original source and data, read-only) |
+| `games/jimmy1/` | Jimmy (1994), ported to TypeScript on the shared QB runtime. Its own `package.json`, `PLAN.md` (changes from the original) and `CLAUDE.md` |
+| `games/jimmy2/`, `jimmyx/` | The other QuickBASIC Jimmy games. Only `legacy/` so far (the original source and data, read-only) |
+| `shared/qb/` | The QuickBASIC text-mode runtime the Jimmy ports share: screen, VGA font, INPUT/SLEEP/PLAY, phone controls. See its `README.md` |
 | `art/` | Full-size source art, not deployed: `brand/` (logos, the 2000s banner), `comic/` (*Star Detours* scans, 1993 originals + 2005 restorations) |
 | `tools/` | Site-wide scripts |
 | `intake/` | **Gitignored.** The original folders exactly as they were handed over, including third-party files that mustn't ship (DOS sound/FLI players, the QB PDS runtime, a stray Doom backup, the Jimmy X gameplay video). P&P files were copied from here into `games/*/legacy` and `art/` |
@@ -41,6 +43,17 @@ MoF's day-to-day work now happens in `games/mof/`.
 - **Windows:** PowerShell 5.1's `Set-Content -Encoding utf8` adds a BOM. Write files with the
   editor tools or node instead. In `git commit -m` here-strings, use single quotes in the
   message.
+
+## Testing (for Claude)
+
+- **Dev servers:** each game has its own: `npm run dev` in `games/<slug>` (MoF on 5173,
+  Jimmy on 5174 by convention; `.claude/launch.json` has both, gitignored).
+- **Test the deployed layout:** assemble `_site/` as the workflow does, and serve it
+  under `/pnp-arcade/`. This catches path problems (the games' back links go to `../../`).
+- **Phones:** `?touch=1` forces the phone layout. Emulate a landscape phone that fits the
+  pane (e.g. 667x375), since screenshots of bigger emulated viewports come out wrong.
+- **Shell quirks:** don't put JS template literals inside `node -e` in the Bash tool, as
+  bash expands the backticks and `${}`. Use the editor tools.
 
 ## Deploying
 

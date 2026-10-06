@@ -1,0 +1,75 @@
+/* The page around a QuickBASIC port. A game can override the --qb-* colours on :root. */
+:root {
+  --qb-page: #000;
+  --qb-bar: #0c0c0c;
+  --qb-line: #262626;
+  --qb-fg: #aaaaaa;
+  --qb-muted: #6d6d6d;
+  --qb-accent: #55ff55;
+  --qb-btn: #161616;
+  --qb-btn-edge: #333;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--qb-page); color: var(--qb-fg); }
+body { font: 15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; }
+
+.qb { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+.qb-bar {
+  flex: none; display: flex; align-items: center; gap: 16px;
+  height: 40px; padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  background: var(--qb-bar); border-bottom: 1px solid var(--qb-line);
+}
+.qb-back { color: var(--qb-accent); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.qb-back:hover, .qb-back:focus-visible { text-decoration: underline; }
+.qb-title { color: var(--qb-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qb-tools { margin-left: auto; display: flex; gap: 6px; }
+.qb-tool {
+  width: 32px; height: 28px; border-radius: 6px; border: 1px solid var(--qb-btn-edge);
+  background: var(--qb-btn); color: var(--qb-fg); font-size: 15px; cursor: pointer;
+}
+.qb-tool:hover { border-color: var(--qb-accent); }
+
+.qb-main { flex: 1; min-height: 0; display: flex; }
+.qb-stage {
+  position: relative; flex: 1; min-width: 0; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation; user-select: none; -webkit-user-select: none;
+}
+.qb-screen { display: block; }
+.qb-hits { position: absolute; pointer-events: none; }
+.qb-hit {
+  position: absolute; display: block; padding: 0; margin: 0; border: 0; border-radius: 2px;
+  background: transparent; cursor: pointer; pointer-events: auto;
+}
+.qb-hit:hover, .qb-hit:active { background: rgba(255, 255, 255, 0.12); box-shadow: inset 3px 0 0 var(--qb-accent); }
+.is-waiting-key .qb-stage { cursor: pointer; }
+
+/* Phones: the screen fills the height, with a rail of buttons on the right. */
+.qb-rail {
+  flex: none; width: 124px; display: flex; flex-direction: column; gap: 6px;
+  padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) 6px;
+  background: var(--qb-bar); border-left: 1px solid var(--qb-line);
+}
+/* The current menu's choices, filling the top of the rail. */
+.qb-choices { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(0, 52px); gap: 6px; align-content: start; }
+.qb-utils { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.qb-rail-btn {
+  min-height: 34px; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; border: 1px solid var(--qb-btn-edge); background: var(--qb-btn);
+  color: var(--qb-fg); font: 600 17px/1 system-ui, sans-serif; text-decoration: none; touch-action: manipulation;
+}
+.qb-rail-btn:active { border-color: var(--qb-accent); color: var(--qb-accent); }
+.qb-rail-back { color: var(--qb-accent); }
+.qb-choice { font: 700 22px/1 ui-monospace, Consolas, monospace; border-color: var(--qb-accent); color: var(--qb-accent); }
+.qb-enter { flex: none; min-height: 42px; }
+.is-waiting-key .qb-enter { border-color: var(--qb-accent); color: var(--qb-accent); background: color-mix(in srgb, var(--qb-accent) 22%, var(--qb-btn)); }
+
+/* The hidden field that brings up the phone keyboard. */
+.qb-kbd { position: fixed; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; border: 0; padding: 0; font-size: 16px; }
+
+.qb-rotate {
+  display: none; position: fixed; inset: 0; z-index: 2; align-items: center; justify-content: center;
+  padding: 24px; text-align: center; background: var(--qb-page); color: var(--qb-accent); font-weight: 600;
+}
+@media (orientation: portrait) { .qb.is-touch .qb-rotate { display: flex; } }

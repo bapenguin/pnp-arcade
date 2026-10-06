@@ -26,4 +26,7 @@ for (const s of [32, 180, 192, 512]) {
 // The coloured Star Detours cover (2005 restoration) for a decorative screen.
 await sharp(path.join(root, 'art', 'comic', 'special_cover.jpg')).resize({ width: 600 }).webp({ quality: 80 }).toFile(path.join(out, 'star-detours-cover.webp'));
 
+// The VGA font (VileR, int10h.org, CC BY-SA 4.0) for the text-mode game screens.
+fs.copyFileSync(path.join(root, 'shared', 'qb', 'font', 'Web437_IBM_VGA_8x16.woff'), path.join(out, 'Web437_IBM_VGA_8x16.woff'));
+
 console.log(`Wrote the hub images to ${path.relative(root, out)}.`);

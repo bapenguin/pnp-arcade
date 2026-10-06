@@ -9,3 +9,6 @@ Thumbs.db
 # files (DOS players, runtimes, a stray Doom backup) and big media. Kept locally only;
 # the P&P files are copied out of here into games/*/legacy and art/.
 intake/
+
+# Local dev-server launch configs
+.claude/launch.json

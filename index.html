@@ -57,7 +57,17 @@ a.bezel:hover .screen, a.bezel:focus-visible .screen { box-shadow: 0 0 0 2px var
 .plate { margin: 10px auto 0; width: max-content; padding: 1px 10px; border-radius: 3px; background: var(--plate); color: #222; font: 600 11px/1.6 ui-monospace, Consolas, monospace; letter-spacing: 0.1em; }
 .rec { position: absolute; top: 8px; left: 10px; z-index: 1; font: 700 11px ui-monospace, Consolas, monospace; color: #fff; text-shadow: 0 0 4px #000; }
 .rec::before { content: "\25CF "; color: #ff3b3b; animation: blink 1.2s steps(2, start) infinite; }
+/* A DOS text-mode screen, in the VGA font: 8x16 cells, so a character is 0.5em wide. */
+@font-face { font-family: "Web437 VGA"; src: url("assets/Web437_IBM_VGA_8x16.woff") format("woff"); font-display: block; }
+.dos { container-type: inline-size; background: #000; border: 6px solid var(--border, #000); display: flex; align-items: center; justify-content: center; }
+.dos pre { margin: 0; font: 4.2cqi/1 "Web437 VGA", monospace; color: #aaa; animation: flicker 6s infinite; }
+.dos .g { color: #00aa00; }
+.dos .w { color: #aaa; }
+.dos .cur { animation: blink 0.5s steps(2, start) infinite; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (prefers-reduced-motion: reduce) { .dos pre, .dos .cur { animation: none; } }
 footer { max-width: 1100px; margin: 48px auto 0; text-align: center; color: var(--muted); font-size: 14px; }
+footer a { color: inherit; }
 @keyframes flicker { 0%, 96%, 100% { opacity: 1; } 97% { opacity: 0.9; } 98% { opacity: 0.97; } }
 @keyframes blink { to { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .screen img, .rec::before { animation: none; } }
@@ -84,6 +94,28 @@ footer { max-width: 1100px; margin: 48px auto 0; text-align: center; color: var(
   </div>
 
   <div class="unit" style="--tilt: 1.6deg">
+    <a class="bezel" href="games/jimmy1/">
+      <div class="screen dos" style="--border: #00aa00">
+<pre aria-hidden="true">    <span class="w">Welcome to . . .</span>
+<span class="g">▄▄▄▄▄▄▄▄▄  ▄  ▄▄     ▄▄  ▄▄     ▄▄  ▄▄   ▄▄
+    ██     █  █ ▀▄ ▄▀ █  █ ▀▄ ▄▀ █    ▀▄▀
+    ██     █  █   █   █  █   █   █     █
+██  ██  INTERACTIVE
+▀▀▀▀▀▀</span>
+
+<span class="w">C:\JIMMY&gt;JIM</span><span class="cur">_</span></pre>
+        <span class="sr">Jimmy title screen</span>
+      </div>
+      <div class="caption">
+        <b>Jimmy</b>
+        <span>1994. A text adventure. Find Bob. Don't take a dip.</span><br>
+        <span class="play">Play now</span>
+      </div>
+    </a>
+    <div class="plate">TERM-02</div>
+  </div>
+
+  <div class="unit" style="--tilt: -0.6deg">
     <div class="bezel">
       <div class="screen"><span class="rec">NOW SHOWING</span><img style="object-position: top" src="assets/star-detours-cover.webp" alt="Star Detours comic cover, starring Jimmy"></div>
       <div class="caption">
@@ -91,10 +123,11 @@ footer { max-width: 1100px; margin: 48px auto 0; text-align: center; color: var(
         <span>P&amp;P Comics, 1993. Jimmy's first adventure in print.</span>
       </div>
     </div>
-    <div class="plate">TERM-02</div>
+    <div class="plate">TERM-03</div>
   </div>
 </main>
 
-<footer>Coming soon: Jimmy, Jimmy 2: The Final Voyage, Jimmy X, and X-Wing War.<br>&copy; P&amp;P Enterprises: Nick Puleo &amp; David Paul.</footer>
+<footer>Coming soon: Jimmy 2: The Final Voyage, Jimmy X, and X-Wing War.<br>&copy; P&amp;P Enterprises: Nick Puleo &amp; David Paul.<br>
+<small>DOS screens use the IBM VGA font from the Ultimate Oldschool PC Font Pack by VileR (<a href="https://int10h.org/oldschool-pc-fonts/">int10h.org</a>), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</small></footer>
 </body>
 </html>

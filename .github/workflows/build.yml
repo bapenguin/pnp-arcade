@@ -37,12 +37,16 @@ jobs:
       - name: Build Massacre of the Fairies
         working-directory: games/mof
         run: npm ci && npm run build
+      - name: Build Jimmy
+        working-directory: games/jimmy1
+        run: npm ci && npm run build
       - name: Assemble the site
         run: |
           mkdir -p _site/games
           cp index.html _site/
           cp -r assets _site/
           cp -r games/mof/dist _site/games/mof
+          cp -r games/jimmy1/dist _site/games/jimmy1
       - uses: actions/upload-artifact@v4
         with:
           name: pnp-arcade-web

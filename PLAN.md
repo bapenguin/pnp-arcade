@@ -20,6 +20,11 @@ Blaster.** This plan adjusts the brief for that and lays out the first ports.
 - The legacy files are in `games/*/legacy`, and the art is in `art/`.
 - A placeholder hub and the deploy workflow are in place.
 
+**Jimmy 1 is ported (2026-10-06).** It runs on the new shared QuickBASIC runtime
+(`shared/qb/`: text screen, VGA font, `PLAY`, phone controls); this covers J3 for text
+mode. It's on the hub as TERM-02, and the details are in `games/jimmy1/PLAN.md`. Next:
+real-phone feedback, then Jimmy X.
+
 ---
 
 ## 0. Archiving standalone MoF
