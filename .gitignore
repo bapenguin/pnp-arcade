@@ -1,0 +1,11 @@
+node_modules/
+dist/
+_site/
+.DS_Store
+Thumbs.db
+*.jbf
+
+# Raw intake: original folders exactly as they were found, including third-party
+# files (DOS players, runtimes, a stray Doom backup) and big media. Kept locally only;
+# the P&P files are copied out of here into games/*/legacy and art/.
+intake/
