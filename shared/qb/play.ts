@@ -26,6 +26,8 @@ export class Synth {
   private background = false;
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
+  // The PC speaker's level under the master (mute) gain; sound clips play at full level.
+  private speaker: GainNode | null = null;
   // When the queued music ends: in game-clock ms (for waiting) and audio time.
   private endClock = 0;
   private endAudio = 0;
@@ -46,10 +48,18 @@ export class Synth {
       if (!AC) return;
       this.ctx = new AC();
       this.master = this.ctx.createGain();
-      this.master.gain.value = this.muted ? 0 : 0.12;
+      this.master.gain.value = this.muted ? 0 : 1;
       this.master.connect(this.ctx.destination);
+      this.speaker = this.ctx.createGain();
+      this.speaker.gain.value = 0.12;
+      this.speaker.connect(this.master);
     }
     void this.ctx.resume();
+  }
+
+  /** The audio context and output (after `unlock`), for sound clips to share. */
+  get audio(): { ctx: AudioContext; out: AudioNode } | null {
+    return this.ctx && this.master ? { ctx: this.ctx, out: this.master } : null;
   }
 
   /** Back to the defaults, as when a program starts. */
@@ -63,7 +73,7 @@ export class Synth {
 
   setMuted(m: boolean): void {
     this.muted = m;
-    if (this.master) this.master.gain.value = m ? 0 : 0.12;
+    if (this.master) this.master.gain.value = m ? 0 : 1;
   }
 
   /** PLAY mml$. Resolves when the music has finished (MF) or at once (MB). */
@@ -83,7 +93,7 @@ export class Synth {
   }
 
   private tone(freq: number, at: number, dur: number): void {
-    if (!this.ctx || !this.master || dur <= 0) return;
+    if (!this.ctx || !this.speaker || dur <= 0) return;
     const osc = this.ctx.createOscillator();
     const env = this.ctx.createGain();
     osc.type = 'square';
@@ -94,7 +104,7 @@ export class Synth {
     env.gain.linearRampToValueAtTime(1, at + fade);
     env.gain.setValueAtTime(1, at + dur - fade);
     env.gain.linearRampToValueAtTime(0, at + dur);
-    osc.connect(env).connect(this.master);
+    osc.connect(env).connect(this.speaker);
     osc.start(at);
     osc.stop(at + dur + 0.01);
   }

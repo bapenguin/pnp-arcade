@@ -4,6 +4,7 @@
 // size, so text stays crisp at any window size without uneven pixel widths.
 
 import { GLYPH_H, GLYPH_W, type Glyphs } from './font';
+import { GFX_H, GFX_W, VGA_PALETTE, type Gfx13 } from './gfx';
 import { COLS, PALETTE, ROWS, type TextScreen } from './screen';
 
 export const TEXT_W = COLS * GLYPH_W; // 640
@@ -30,6 +31,8 @@ export class Renderer {
     readonly canvas: HTMLCanvasElement,
     private screen: TextScreen,
     private glyphs: Glyphs,
+    /** The SCREEN 13 screen when one is showing. */
+    private gfx: () => Gfx13 | null = () => null,
   ) {
     this.src.width = SRC_W;
     this.src.height = SRC_H;
@@ -58,20 +61,50 @@ export class Renderer {
   }
 
   private draw(): void {
-    const t = performance.now();
-    const cursor = this.screen.cursorVisible && Math.floor(t / CURSOR_MS) % 2 === 0;
-    const blink = Math.floor(t / BLINK_MS) % 2 === 0;
-    if (!this.screen.dirty && cursor === this.lastCursor && blink === this.lastBlink) return;
-    this.screen.dirty = false;
-    this.lastCursor = cursor;
-    this.lastBlink = blink;
-    this.paint(cursor, blink);
+    const gfx = this.gfx();
+    if (gfx) {
+      if (!gfx.dirty && !this.screen.dirty) return;
+      gfx.dirty = false;
+      this.screen.dirty = false;
+      this.paintGfx(gfx);
+    } else {
+      const t = performance.now();
+      const cursor = this.screen.cursorVisible && Math.floor(t / CURSOR_MS) % 2 === 0;
+      const blink = Math.floor(t / BLINK_MS) % 2 === 0;
+      if (!this.screen.dirty && cursor === this.lastCursor && blink === this.lastBlink) return;
+      this.screen.dirty = false;
+      this.lastCursor = cursor;
+      this.lastBlink = blink;
+      this.paint(cursor, blink);
+    }
     this.srcCtx.putImageData(this.image, 0, 0);
     this.midCtx.imageSmoothingEnabled = false;
     this.midCtx.drawImage(this.src, 0, 0, this.mid.width, this.mid.height);
     this.ctx.imageSmoothingEnabled = true;
     this.ctx.imageSmoothingQuality = 'high';
     this.ctx.drawImage(this.mid, 0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  /** SCREEN 13: each of the 320x200 pixels as a 2x2 block, so it fills the same 640x400. */
+  private paintGfx(g: Gfx13): void {
+    const d = this.image.data;
+    for (let i = 0; i < d.length; i += 4) {
+      d[i] = d[i + 1] = d[i + 2] = 0;
+      d[i + 3] = 255;
+    }
+    for (let y = 0; y < GFX_H; y++) {
+      for (let x = 0; x < GFX_W; x++) {
+        const [r, gr, b] = VGA_PALETTE[g.pixels[y * GFX_W + x]];
+        for (let dy = 0; dy < 2; dy++) {
+          let p = ((BORDER + y * 2 + dy) * SRC_W + BORDER + x * 2) * 4;
+          for (let dx = 0; dx < 2; dx++, p += 4) {
+            d[p] = r;
+            d[p + 1] = gr;
+            d[p + 2] = b;
+          }
+        }
+      }
+    }
   }
 
   private paint(cursor: boolean, blink: boolean): void {

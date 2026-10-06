@@ -17,7 +17,8 @@ A browser arcade of games Nick Puleo and David Paul (P&P Enterprises) made in th
 | `index.html`, `assets/` | The hub: plain HTML, no build. `assets/` is made by `npm run hub-assets` from `art/` |
 | `games/mof/` | Massacre of the Fairies (TypeScript + Vite), imported with full history via `git subtree`. Its own `package.json`; it builds and plays on its own |
 | `games/jimmy1/` | Jimmy (1994), ported to TypeScript on the shared QB runtime. Its own `package.json`, `PLAN.md` (changes from the original) and `CLAUDE.md` |
-| `games/jimmy2/`, `jimmyx/` | The other QuickBASIC Jimmy games. Only `legacy/` so far (the original source and data, read-only) |
+| `games/jimmyx/` | Jimmy X, the QuickBASIC RPG, on the same runtime. Its own `package.json`, `PLAN.md` (changes, balance, the J7 story draft) and `CLAUDE.md`. Its sound clips are converted by `npm run sounds` |
+| `games/jimmy2/` | Jimmy 2. Only `legacy/` so far (the original source, read-only) |
 | `shared/qb/` | The QuickBASIC text-mode runtime the Jimmy ports share: screen, VGA font, INPUT/SLEEP/PLAY, phone controls. See its `README.md` |
 | `art/` | Full-size source art, not deployed: `brand/` (logos, the 2000s banner), `comic/` (*Star Detours* scans, 1993 originals + 2005 restorations) |
 | `tools/` | Site-wide scripts |
@@ -46,8 +47,8 @@ MoF's day-to-day work now happens in `games/mof/`.
 
 ## Testing (for Claude)
 
-- **Dev servers:** each game has its own: `npm run dev` in `games/<slug>` (MoF on 5173,
-  Jimmy on 5174 by convention; `.claude/launch.json` has both, gitignored).
+- **Dev servers:** each game has its own: `npm run dev` in `games/<slug>`. By convention
+  MoF runs on 5173, Jimmy on 5174 and Jimmy X on 5175. `.claude/launch.json` is gitignored.
 - **Test the deployed layout:** assemble `_site/` as the workflow does, and serve it
   under `/pnp-arcade/`. This catches path problems (the games' back links go to `../../`).
 - **Phones:** `?touch=1` forces the phone layout. Emulate a landscape phone that fits the

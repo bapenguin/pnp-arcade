@@ -40,6 +40,9 @@ jobs:
       - name: Build Jimmy
         working-directory: games/jimmy1
         run: npm ci && npm run build
+      - name: Build Jimmy X
+        working-directory: games/jimmyx
+        run: npm ci && npm run build
       - name: Assemble the site
         run: |
           mkdir -p _site/games
@@ -47,6 +50,7 @@ jobs:
           cp -r assets _site/
           cp -r games/mof/dist _site/games/mof
           cp -r games/jimmy1/dist _site/games/jimmy1
+          cp -r games/jimmyx/dist _site/games/jimmyx
       - uses: actions/upload-artifact@v4
         with:
           name: pnp-arcade-web

@@ -3,7 +3,8 @@
 //
 // Menus in these games are lines like "press 1 to attack" or "2) Buy". While INPUT is
 // waiting, each such line on screen becomes a button that types its key and Enter, so
-// nothing needs typing on a phone, and mouse users can click them too.
+// nothing needs typing on a phone, and mouse users can click them too. While the game
+// reads single keys (INKEY$, e.g. a timed battle menu), the buttons type just the key.
 
 import './host.css';
 import { Clock } from './clock';
@@ -13,6 +14,7 @@ import { Synth } from './play';
 import { QB, type Waiting } from './qb';
 import { BORDER, Renderer, SRC_H, SRC_W, TEXT_W } from './render';
 import { TextScreen } from './screen';
+import { Sfx } from './sfx';
 
 export interface HostOptions {
   /** Shown in the top bar, e.g. "Jimmy (1994)". */
@@ -22,16 +24,22 @@ export interface HostOptions {
   exe: string;
   /** Where the back link goes. */
   arcadeUrl?: string;
+  /** Sound clips by name, for `qb.clip(name)`. */
+  sounds?: Record<string, string>;
 }
 
 // "press 1 to attack", "PRESS 1. TO SEARCH", "Prees 2 to talk", "press X to go down"
 const PRESS = /\bpre+ss\s+([0-9a-z])\b/i;
 // "1) Sell", "   2) Crossbow......$200"
 const NUMBERED = /^\s*([0-9])\)/;
-// "x to go left"
+// "1 - attack", " 5- Earthquake", " 12 -poffite" (but not an empty " 3 - " item slot)
+const DASHED = /^\s*([0-9]{1,2})\s*-\s*\S/;
+// "x to go left", "0 to exit"
 const LETTER_TO = /^\s*([a-z0-9])\s+to\s/i;
-// "(Y/N)", "(y/N)", "(Y\N)"
-const YES_NO = /\(\s*y\s*[/\\]\s*n\s*\)/i;
+// "(M for more)"
+const FOR_MORE = /\(([a-z]) for /i;
+// "(Y/N)", "(y/N)", "(Y\N)", "[Y/N]"
+const YES_NO = /[([]\s*y\s*[/\\]\s*n\s*[)\]]/i;
 
 const mutedKey = 'pnp.qb.muted';
 
@@ -40,7 +48,8 @@ export class Host {
   readonly keys = new KeyBuffer();
   readonly clock = new Clock();
   readonly synth = new Synth(this.clock);
-  readonly qb = new QB(this.screen, this.keys, this.clock, this.synth);
+  readonly sfx = new Sfx(this.synth, this.clock);
+  readonly qb = new QB(this.screen, this.keys, this.clock, this.synth, this.sfx);
   readonly touch: boolean;
 
   private root = el('div', 'qb');
@@ -62,14 +71,16 @@ export class Host {
       this.muted = localStorage.getItem(mutedKey) === '1';
     } catch {}
     this.synth.setMuted(this.muted);
+    this.sfx.register(opts.sounds ?? {});
     this.build();
     this.qb.onWait = (w) => this.onWait(w);
   }
 
   /** Loads the font, then runs `game` forever: DOS prompt, the program, END. */
   async run(game: (qb: QB) => Promise<void>): Promise<void> {
-    const glyphs = await loadFont();
-    this.renderer = new Renderer(this.canvas, this.screen, glyphs);
+    const [glyphs, glyphs8] = await Promise.all([loadFont(16), loadFont(8)]);
+    this.qb.glyphs8 = glyphs8;
+    this.renderer = new Renderer(this.canvas, this.screen, glyphs, () => this.qb.gfx);
     this.layout();
     if (import.meta.env.DEV) (window as unknown as { __qb: Host }).__qb = this;
     for (;;) {
@@ -200,11 +211,9 @@ export class Host {
   }
 
   /** The current menu's choices as big rail buttons (lines on screen are only ~14px tall on a phone). */
-  private showChoices(keys: string[]): void {
+  private showChoices(keys: string[], mode: Waiting): void {
     this.choices.textContent = '';
-    for (const k of keys) {
-      this.choices.append(this.railButton(k, `Choose ${k}`, () => this.qb.waiting === 'input' && this.keys.push(k, 'Enter'), 'qb-choice'));
-    }
+    for (const k of keys) this.choices.append(this.railButton(k, `Choose ${k}`, () => this.choose(k, mode), 'qb-choice'));
   }
 
   private muteButton(cls = 'qb-tool'): HTMLButtonElement {
@@ -260,35 +269,46 @@ export class Host {
   }
 
   private onWait(w: Waiting): void {
-    this.placeHits();
+    // Between reads the program briefly runs (a timed battle menu polls every second);
+    // the buttons stay up through that rather than flickering.
+    if (w !== 'run') this.placeHits();
     this.root.classList.toggle('is-waiting-key', w === 'sleep' || w === 'key');
   }
 
   /**
-   * The menu lines for the question INPUT is asking: those printed since the previous
+   * The menu lines for the question being asked: those printed since the previous
    * answer (a line starting "?"), so an older menu still on screen doesn't count.
    */
   private menuLines(): { row: number; key: string; text: string }[] {
     const found: { row: number; key: string; text: string }[] = [];
+    if (this.qb.gfx) return found;
     for (let row = this.screen.row - 1; row >= 1; row--) {
       const text = this.screen.rowText(row);
       if (text.startsWith('?')) break;
-      const m = PRESS.exec(text) ?? NUMBERED.exec(text) ?? LETTER_TO.exec(text);
+      const m = PRESS.exec(text) ?? NUMBERED.exec(text) ?? DASHED.exec(text) ?? LETTER_TO.exec(text) ?? FOR_MORE.exec(text);
       if (m) found.unshift({ row, key: m[1].toUpperCase(), text: text.trim() });
-      else if (YES_NO.test(text)) found.unshift({ row: 0, key: 'Y', text }, { row: 0, key: 'N', text });
+      if (YES_NO.test(text)) found.push({ row: 0, key: 'Y', text }, { row: 0, key: 'N', text });
     }
     return found;
   }
 
-  /** Puts a button over each menu line on screen while INPUT waits. */
+  /** Types a choice: with Enter for INPUT, on its own for a single-key read. */
+  private choose(key: string, mode: Waiting): void {
+    if (mode === 'inkey') this.keys.push(key);
+    else if (this.qb.waiting === 'input') this.keys.push(key, 'Enter');
+  }
+
+  private hitsFor = '';
+
+  /** Puts a button over each menu line on screen while INPUT (or INKEY$) waits. */
   private placeHits(): void {
+    const mode = this.qb.waiting;
+    const lines = mode === 'input' || mode === 'inkey' ? this.menuLines() : [];
+    const sig = `${mode === 'inkey' ? 'k' : 'i'}|${this.hits.style.width}|${lines.map((l) => `${l.row}:${l.key}`).join(',')}`;
+    if (sig === this.hitsFor) return;
+    this.hitsFor = sig;
     this.hits.textContent = '';
-    if (this.qb.waiting !== 'input') {
-      if (this.touch) this.showChoices([]);
-      return;
-    }
-    const lines = this.menuLines();
-    if (this.touch) this.showChoices([...new Set(lines.map((l) => l.key))]);
+    if (this.touch) this.showChoices([...new Set(lines.map((l) => l.key))], mode);
     const sx = parseFloat(this.hits.style.width) / SRC_W;
     const sy = parseFloat(this.hits.style.height) / SRC_H;
     lines.forEach(({ row, key, text }) => {
@@ -304,7 +324,7 @@ export class Host {
       b.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (this.qb.waiting === 'input') this.keys.push(key, 'Enter');
+        this.choose(key, mode);
       });
       this.hits.append(b);
     });

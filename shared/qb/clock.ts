@@ -33,6 +33,8 @@ export class Clock {
   /** Waits until `until()` is true or `ms` of game time pass (forever if ms is Infinity). */
   async wait(ms: number, until: () => boolean = () => false): Promise<void> {
     const end = this.now() + ms;
+    // Turbo still yields once, so a polling loop (a battle menu) can't starve everything else.
+    if (this.turbo) await new Promise((r) => setTimeout(r, 0));
     while (!until() && !this.turbo && this.now() < end) await tick();
   }
 

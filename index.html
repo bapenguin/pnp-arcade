@@ -63,6 +63,8 @@ a.bezel:hover .screen, a.bezel:focus-visible .screen { box-shadow: 0 0 0 2px var
 .dos pre { margin: 0; font: 4.2cqi/1 "Web437 VGA", monospace; color: #aaa; animation: flicker 6s infinite; }
 .dos .g { color: #00aa00; }
 .dos .w { color: #aaa; }
+.dos .m { color: #aa00aa; }
+.dos .w15 { color: #fff; }
 .dos .cur { animation: blink 0.5s steps(2, start) infinite; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @media (prefers-reduced-motion: reduce) { .dos pre, .dos .cur { animation: none; } }
@@ -116,6 +118,29 @@ footer a { color: inherit; }
   </div>
 
   <div class="unit" style="--tilt: -0.6deg">
+    <a class="bezel" href="games/jimmyx/">
+      <div class="screen dos">
+<pre aria-hidden="true"><span class="m">                    7
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Jimmy's Hp -  45   Bearded Lady's Hp -  40
+ Jimmy's Mp -  25
+      You encounter a <span class="w15">Bearded Lady</span>!!!
+      1 - attack
+      2 - Magic
+      3 - Run
+      4 - Use item</span></pre>
+        <span class="sr">Jimmy X battle screen</span>
+      </div>
+      <div class="caption">
+        <b>Jimmy X</b>
+        <span>Mid-90s. Bob is back. Ten seconds to choose, every fight.</span><br>
+        <span class="play">Play now</span>
+      </div>
+    </a>
+    <div class="plate">TERM-03</div>
+  </div>
+
+  <div class="unit" style="--tilt: 2.1deg">
     <div class="bezel">
       <div class="screen"><span class="rec">NOW SHOWING</span><img style="object-position: top" src="assets/star-detours-cover.webp" alt="Star Detours comic cover, starring Jimmy"></div>
       <div class="caption">
@@ -123,11 +148,11 @@ footer a { color: inherit; }
         <span>P&amp;P Comics, 1993. Jimmy's first adventure in print.</span>
       </div>
     </div>
-    <div class="plate">TERM-03</div>
+    <div class="plate">TERM-04</div>
   </div>
 </main>
 
-<footer>Coming soon: Jimmy 2: The Final Voyage, Jimmy X, and X-Wing War.<br>&copy; P&amp;P Enterprises: Nick Puleo &amp; David Paul.<br>
+<footer>Coming soon: Jimmy 2: The Final Voyage and X-Wing War.<br>&copy; P&amp;P Enterprises: Nick Puleo &amp; David Paul.<br>
 <small>DOS screens use the IBM VGA font from the Ultimate Oldschool PC Font Pack by VileR (<a href="https://int10h.org/oldschool-pc-fonts/">int10h.org</a>), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</small></footer>
 </body>
 </html>

@@ -1,13 +1,12 @@
 // SCREEN 0: the 80x25 text screen, as QuickBASIC's PRINT, LOCATE, COLOR and CLS saw it.
 // Rows and columns are 1-based like in BASIC. Printing past column 80 wraps, and a new
-// line past row 24 scrolls rows 1-24 up (row 25 sits outside the scrolling area, as in
-// QB, and is only reached with LOCATE).
+// line on row 25 scrolls the whole screen up (the classic reason QB programs end a PRINT
+// on the bottom row with a semicolon).
 
 import { cp437Byte } from './cp437';
 
 export const COLS = 80;
 export const ROWS = 25;
-const SCROLL_BOTTOM = 24;
 
 /** The 16 text-mode colours (CGA/EGA/VGA defaults), as [r, g, b]. */
 export const PALETTE: [number, number, number][] = [
@@ -96,8 +95,8 @@ export class TextScreen {
   newline(): void {
     this.pendingWrap = false;
     this.col = 1;
-    if (this.row < SCROLL_BOTTOM) this.row++;
-    else if (this.row === SCROLL_BOTTOM) this.scroll();
+    if (this.row < ROWS) this.row++;
+    else this.scroll();
     this.dirty = true;
   }
 
@@ -122,10 +121,10 @@ export class TextScreen {
   }
 
   private scroll(): void {
-    const n = (SCROLL_BOTTOM - 1) * COLS;
-    this.chars.copyWithin(0, COLS, SCROLL_BOTTOM * COLS);
-    this.fg.copyWithin(0, COLS, SCROLL_BOTTOM * COLS);
-    this.bg.copyWithin(0, COLS, SCROLL_BOTTOM * COLS);
+    const n = (ROWS - 1) * COLS;
+    this.chars.copyWithin(0, COLS);
+    this.fg.copyWithin(0, COLS);
+    this.bg.copyWithin(0, COLS);
     this.chars.fill(32, n, n + COLS);
     this.fg.fill(this.fore, n, n + COLS);
     this.bg.fill(this.back, n, n + COLS);

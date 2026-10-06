@@ -22,8 +22,17 @@ Blaster.** This plan adjusts the brief for that and lays out the first ports.
 
 **Jimmy 1 is ported (2026-10-06).** It runs on the new shared QuickBASIC runtime
 (`shared/qb/`: text screen, VGA font, `PLAY`, phone controls); this covers J3 for text
-mode. It's on the hub as TERM-02, and the details are in `games/jimmy1/PLAN.md`. Next:
-real-phone feedback, then Jimmy X.
+mode. It's on the hub as TERM-02, and the details are in `games/jimmy1/PLAN.md`.
+
+**Jimmy X is ported (2026-10-06): J1-J6 are done.** That covers:
+- the timed battles
+- the Sound Blaster clips, converted with no ffmpeg (including 4-bit ADPCM)
+- the `SCREEN 13` intro
+- browser saves with autosave
+
+The runtime gained graphics, `inkey`, clips and numeric input. It's on the hub as
+TERM-03. **Next: J7, the missing story.** `games/jimmyx/PLAN.md` has a draft outline and
+questions for Nick.
 
 ---
 

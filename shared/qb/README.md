@@ -15,25 +15,34 @@ new Host({ title: 'Jimmy (1994)', dir: 'JIMMY', exe: 'JIM' }).run(async (qb) => 
 
 | File | What |
 |---|---|
-| `qb.ts` | The statements: `print`/`write` (PRINT with or without `;`), `tab`, `cls`, `color`, `locate`, `input`, `sleep`, `play`, `end`. Numbers print with QB's spacing (`" 455 "`) |
-| `screen.ts` | `SCREEN 0`: the 80x25 buffer, 16-colour palette, border, wrapping at column 80, scrolling rows 1-24 |
-| `render.ts` | Draws the buffer to a canvas (cursor, blink, border), scaled "sharp bilinear" |
-| `font.ts`, `font/` | The VGA 8x16 font, read from the Web437 webfont into exact bitmaps at startup |
+| `qb.ts` | The statements: `print`/`write` (PRINT with or without `;`), `tab`, `cls`, `color`, `locate`, `input`, `inputNumber` (with "Redo from start"), `sleep`, `inkey(ms)` (a timed single-key read), `play`, `clip` (a Sound Blaster clip, for `SHELL "play x.voc"`), `setScreen(0 \| 13)`, `end`. Numbers print with QB's spacing (`" 455 "`) |
+| `screen.ts` | `SCREEN 0`: the 80x25 buffer, 16-colour palette, border, wrapping at column 80, and a new line on row 25 scrolling the whole screen (as in QB) |
+| `gfx.ts` | `SCREEN 13`: 320x200 in the VGA's default 256 colours, PRINT in the 8x8 font (40x25), `line` (B, BF, style), `pset`, `circle`, `paint`. While it's showing, `qb.print`/`color`/`locate`/`cls` go to it |
+| `render.ts` | Draws the text buffer (cursor, blink, border) or the graphics screen to a canvas, scaled "sharp bilinear" |
+| `font.ts`, `font/` | The VGA 8x16 and 8x8 fonts, read from the Web437 webfonts into exact bitmaps at startup |
+| `sfx.ts` | Clips: fetched and decoded on first use, through the same mute as `PLAY` |
 | `cp437.ts` | The IBM PC character set ↔ Unicode |
 | `play.ts` | `PLAY` on a Web Audio square wave. Octave 3 starts at middle C; settings carry over between calls, as in QB |
 | `keys.ts`, `clock.ts` | The keyboard buffer; a clock that stops while the tab is hidden |
 | `host.ts`, `host.css` | The page: layout (4:3 on desktop, square pixels on phones), top bar, DOS boot prompt, tappable menu lines, the phone rail |
 
-**Menu detection.** While `INPUT` waits, lines printed since the last answer that look like
-choices (`press 1 to…`, `1) Buy`, `x to go left`, `(Y/N)`) become clickable. On phones
-their keys also show as big buttons in the rail. If a new game words its menus another
-way, add a pattern in `host.ts`.
+**Menu detection.** While `INPUT` or `inkey` waits, lines printed since the last answer
+that look like choices become clickable. The recognised forms are:
+- `press 1 to…`
+- `1) Buy`
+- `1 - attack`
+- `x to go left`
+- `(M for more)`
+- `(Y/N)` or `[Y/N]`
+
+On phones their keys also show as big buttons in the rail. For `inkey`, a button types
+just the key; for `INPUT`, the key and Enter. If a new game words its menus another way,
+add a pattern in `host.ts`.
 
 **Not built yet** (add when a port needs it):
-- `SCREEN 1` / `SCREEN 13` graphics (Jimmy 2, Jimmy X)
-- `INKEY$` and `ON KEY` timed input (Jimmy X's battles)
+- `SCREEN 1` graphics and `GET`/`PUT` (Jimmy 2)
 - `SOUND`/`BEEP`
-- VOC/WAV clips
+- `.CMF` FM music
 
 ## Font licence
 
