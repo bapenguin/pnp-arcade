@@ -15,9 +15,9 @@ new Host({ title: 'Jimmy (1994)', dir: 'JIMMY', exe: 'JIM' }).run(async (qb) => 
 
 | File | What |
 |---|---|
-| `qb.ts` | The statements: `print`/`write` (PRINT with or without `;`), `tab`, `cls`, `color`, `locate`, `input`, `inputNumber` (with "Redo from start"), `sleep`, `inkey(ms)` (a timed single-key read), `play`, `clip` (a Sound Blaster clip, for `SHELL "play x.voc"`), `setScreen(0 \| 13)`, `end`. Numbers print with QB's spacing (`" 455 "`) |
+| `qb.ts` | The statements: `print`/`write` (PRINT with or without `;`), `tab`, `cls`, `color`, `locate`, `input`, `inputNumber` (with "Redo from start"), `sleep`, `inkey(ms)` (a timed single-key read), `play`, `clip` (a Sound Blaster clip, for `SHELL "play x.voc"`), `setScreen(0 \| 1 \| 13)`, `end`. Numbers print with QB's spacing (`" 455 "`) |
 | `screen.ts` | `SCREEN 0`: the 80x25 buffer, 16-colour palette, border, wrapping at column 80, and a new line on row 25 scrolling the whole screen (as in QB) |
-| `gfx.ts` | `SCREEN 13`: 320x200 in the VGA's default 256 colours, PRINT in the 8x8 font (40x25), `line` (B, BF, style), `pset`, `circle`, `paint`. While it's showing, `qb.print`/`color`/`locate`/`cls` go to it |
+| `gfx.ts` | The graphics screens, 320x200 with PRINT in the 8x8 font (40x25): `SCREEN 13` in the VGA's default 256 colours, and `SCREEN 1` in CGA's 4 (`COLOR bg, palette`). `line` (B, BF, style), `pset`, `circle`, `paint`, `get`/`put` (XOR by default). While one is showing, `qb.print`/`color`/`locate`/`cls` go to it |
 | `render.ts` | Draws the text buffer (cursor, blink, border) or the graphics screen to a canvas, scaled "sharp bilinear" |
 | `font.ts`, `font/` | The VGA 8x16 and 8x8 fonts, read from the Web437 webfonts into exact bitmaps at startup |
 | `sfx.ts` | Clips: fetched and decoded on first use, through the same mute as `PLAY` |
@@ -40,7 +40,6 @@ just the key; for `INPUT`, the key and Enter. If a new game words its menus anot
 add a pattern in `host.ts`.
 
 **Not built yet** (add when a port needs it):
-- `SCREEN 1` graphics and `GET`/`PUT` (Jimmy 2)
 - `SOUND`/`BEEP`
 - `.CMF` FM music
 

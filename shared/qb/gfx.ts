@@ -1,6 +1,9 @@
-// SCREEN 13: 320x200 pixels in 256 colours, with the VGA's default palette, and PRINT in
-// the 8x8 font on a 40x25 grid. LINE (with B, BF and a line style), PSET, CIRCLE and
-// PAINT behave as in QuickBASIC, which is enough for the Jimmy intros.
+// The graphics screens, both 320x200 with PRINT in the 8x8 font on a 40x25 grid:
+//  - SCREEN 13: 256 colours, in the VGA's default palette.
+//  - SCREEN 1: CGA's 4 colours. Colour 0 is the background (any of the 16, set with
+//    COLOR bg), and 1-3 come from palette 0 or 1 (COLOR , pal). PRINT always uses 3.
+// LINE (with B, BF and a line style), PSET, CIRCLE, PAINT and GET/PUT behave as in
+// QuickBASIC, which is enough for the Jimmy intros.
 
 import type { Glyphs } from './font';
 
@@ -37,15 +40,36 @@ export const VGA_PALETTE: [number, number, number][] = (() => {
   return p;
 })();
 
-export class Gfx13 {
+/** CGA's palettes in SCREEN 1, as VGA shows them: the high-intensity sets. */
+const CGA_PALETTES = [
+  [10, 12, 14], // 0: light green, light red, yellow
+  [11, 13, 15], // 1: light cyan, light magenta, white
+];
+
+/** A GET (x1,y1)-(x2,y2) image, for PUT. */
+export interface Sprite {
+  w: number;
+  h: number;
+  pixels: Uint8Array;
+}
+
+export class Gfx {
   readonly pixels = new Uint8Array(GFX_W * GFX_H);
   row = 1;
   col = 1;
-  fore = 15;
+  fore: number;
+  /** SCREEN 1: the background colour (0-15) and the palette (0 or 1). */
+  back = 0;
+  palette = 1;
   dirty = true;
   private pendingWrap = false;
 
-  constructor(private glyphs: Glyphs) {}
+  constructor(
+    private glyphs: Glyphs,
+    readonly mode: 1 | 13 = 13,
+  ) {
+    this.fore = mode === 1 ? 3 : 15;
+  }
 
   cls(): void {
     this.pixels.fill(0);
@@ -55,8 +79,48 @@ export class Gfx13 {
     this.dirty = true;
   }
 
-  color(fore?: number): void {
-    if (fore !== undefined) this.fore = fore & 255;
+  /** SCREEN 13: COLOR fore. SCREEN 1: COLOR background, palette (odd = palette 1). */
+  color(a?: number, b?: number): void {
+    if (this.mode === 13) {
+      if (a !== undefined) this.fore = a & 255;
+      return;
+    }
+    if (a !== undefined) this.back = a & 15;
+    if (b !== undefined) this.palette = b & 1;
+    this.dirty = true;
+  }
+
+  /** The [r, g, b] a pixel value shows as. */
+  rgb(c: number): [number, number, number] {
+    if (this.mode === 13) return VGA_PALETTE[c];
+    return VGA_PALETTE[c & 3 ? CGA_PALETTES[this.palette][(c & 3) - 1] : this.back];
+  }
+
+  /** GET (x1,y1)-(x2,y2), array. */
+  get(x1: number, y1: number, x2: number, y2: number): Sprite {
+    const [ax, bx] = [Math.min(x1, x2), Math.max(x1, x2)].map(Math.round);
+    const [ay, by] = [Math.min(y1, y2), Math.max(y1, y2)].map(Math.round);
+    const w = bx - ax + 1, h = by - ay + 1;
+    const pixels = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) pixels[y * w + x] = this.pixels[(ay + y) * GFX_W + ax + x];
+    return { w, h, pixels };
+  }
+
+  /** PUT (x,y), array[, action]. QB's default action is XOR, so a second PUT erases. */
+  put(x: number, y: number, s: Sprite, action: 'XOR' | 'PSET' | 'PRESET' | 'AND' | 'OR' = 'XOR'): void {
+    x = Math.round(x);
+    y = Math.round(y);
+    // QB stops with "Illegal function call" if the image would go off the screen.
+    if (x < 0 || y < 0 || x + s.w > GFX_W || y + s.h > GFX_H) throw new Error('Illegal function call');
+    const mask = this.mode === 1 ? 3 : 255;
+    for (let sy = 0; sy < s.h; sy++) {
+      for (let sx = 0; sx < s.w; sx++) {
+        const i = (y + sy) * GFX_W + x + sx, p = s.pixels[sy * s.w + sx], d = this.pixels[i];
+        this.pixels[i] =
+          action === 'XOR' ? d ^ p : action === 'PSET' ? p : action === 'PRESET' ? ~p & mask : action === 'AND' ? d & p : d | p;
+      }
+    }
+    this.dirty = true;
   }
 
   locate(row?: number, col?: number): void {

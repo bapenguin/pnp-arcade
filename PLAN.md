@@ -31,7 +31,7 @@ mode. It's on the hub as TERM-02, and the details are in `games/jimmy1/PLAN.md`.
 - browser saves with autosave
 
 The runtime gained graphics, `inkey`, clips and numeric input. It's on the hub as
-TERM-03.
+TERM-04.
 
 **Jimmy X's story is finished (2026-10-07): J7 is done.** The new content covers:
 - Bestaw the hermit (from Jimmy 2)
@@ -41,7 +41,19 @@ TERM-03.
 - an ending
 - the Regelt Colosseum, for levelling up
 
-`games/jimmyx/PLAN.md` has the details. Next up is Jimmy 2.
+`games/jimmyx/PLAN.md` has the details.
+
+**Jimmy 2 is ported and finished (2026-10-07).** The source was never finished: past the
+Well of Elders every choice looped through " DIE" and the item list. New content
+completes it along the route the game gives:
+- the Temple of Asterixey and Brother Larry's gift shop
+- the Trial of Asterixey (the unused `SUB magic`)
+- the chasm and the Mombizan chief
+- Bestaw's hut, where FORGON turns out to be Bob's (setting up Jimmy X)
+- an ending
+
+The runtime gained `SCREEN 1` (CGA, for the intro's flashes) and `GET`/`PUT`. It's on the
+hub as TERM-03, and `games/jimmy2/PLAN.md` has the details.
 
 ---
 

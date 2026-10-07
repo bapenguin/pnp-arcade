@@ -18,8 +18,8 @@ A browser arcade of games Nick Puleo and David Paul (P&P Enterprises) made in th
 | `games/mof/` | Massacre of the Fairies (TypeScript + Vite), imported with full history via `git subtree`. Its own `package.json`; it builds and plays on its own |
 | `games/jimmy1/` | Jimmy (1994), ported to TypeScript on the shared QB runtime. Its own `package.json`, `PLAN.md` (changes from the original) and `CLAUDE.md` |
 | `games/jimmyx/` | Jimmy X, the QuickBASIC RPG, on the same runtime. Its own `package.json`, `PLAN.md` (changes, balance, the new J7 story content) and `CLAUDE.md`. Its sound clips are converted by `npm run sounds` |
-| `games/jimmy2/` | Jimmy 2. Only `legacy/` so far (the original source, read-only) |
-| `shared/qb/` | The QuickBASIC text-mode runtime the Jimmy ports share: screen, VGA font, INPUT/SLEEP/PLAY, phone controls. See its `README.md` |
+| `games/jimmy2/` | Jimmy 2: The Final Voyage, on the same runtime. The original was never finished; new content (marked "New") completes it. Its `PLAN.md` has where the original stops and what was added |
+| `shared/qb/` | The QuickBASIC text-mode runtime the Jimmy ports share: screen, VGA font, INPUT/SLEEP/PLAY, SCREEN 1/13 graphics, phone controls. See its `README.md` |
 | `art/` | Full-size source art, not deployed: `brand/` (logos, the 2000s banner), `comic/` (*Star Detours* scans, 1993 originals + 2005 restorations) |
 | `tools/` | Site-wide scripts |
 | `intake/` | **Gitignored.** The original folders exactly as they were handed over, including third-party files that mustn't ship (DOS sound/FLI players, the QB PDS runtime, a stray Doom backup, the Jimmy X gameplay video). P&P files were copied from here into `games/*/legacy` and `art/` |
@@ -48,7 +48,7 @@ MoF's day-to-day work now happens in `games/mof/`.
 ## Testing (for Claude)
 
 - **Dev servers:** each game has its own: `npm run dev` in `games/<slug>`. By convention
-  MoF runs on 5173, Jimmy on 5174 and Jimmy X on 5175. `.claude/launch.json` is gitignored.
+  MoF runs on 5173, Jimmy on 5174, Jimmy X on 5175 and Jimmy 2 on 5176. `.claude/launch.json` is gitignored.
 - **Test the deployed layout:** assemble `_site/` as the workflow does, and serve it
   under `/pnp-arcade/`. This catches path problems (the games' back links go to `../../`).
 - **Phones:** `?touch=1` forces the phone layout. Emulate a landscape phone that fits the

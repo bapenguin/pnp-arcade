@@ -4,7 +4,7 @@
 // size, so text stays crisp at any window size without uneven pixel widths.
 
 import { GLYPH_H, GLYPH_W, type Glyphs } from './font';
-import { GFX_H, GFX_W, VGA_PALETTE, type Gfx13 } from './gfx';
+import { GFX_H, GFX_W, type Gfx } from './gfx';
 import { COLS, PALETTE, ROWS, type TextScreen } from './screen';
 
 export const TEXT_W = COLS * GLYPH_W; // 640
@@ -31,8 +31,8 @@ export class Renderer {
     readonly canvas: HTMLCanvasElement,
     private screen: TextScreen,
     private glyphs: Glyphs,
-    /** The SCREEN 13 screen when one is showing. */
-    private gfx: () => Gfx13 | null = () => null,
+    /** The graphics screen (SCREEN 1 or 13) when one is showing. */
+    private gfx: () => Gfx | null = () => null,
   ) {
     this.src.width = SRC_W;
     this.src.height = SRC_H;
@@ -85,16 +85,20 @@ export class Renderer {
     this.ctx.drawImage(this.mid, 0, 0, this.canvas.width, this.canvas.height);
   }
 
-  /** SCREEN 13: each of the 320x200 pixels as a 2x2 block, so it fills the same 640x400. */
-  private paintGfx(g: Gfx13): void {
+  /** SCREEN 1 and 13: each of the 320x200 pixels as a 2x2 block, so it fills the same 640x400. */
+  private paintGfx(g: Gfx): void {
     const d = this.image.data;
+    // CGA's border shows SCREEN 1's background colour; SCREEN 13's is black.
+    const [er, eg, eb] = g.mode === 1 ? g.rgb(0) : [0, 0, 0];
     for (let i = 0; i < d.length; i += 4) {
-      d[i] = d[i + 1] = d[i + 2] = 0;
+      d[i] = er;
+      d[i + 1] = eg;
+      d[i + 2] = eb;
       d[i + 3] = 255;
     }
     for (let y = 0; y < GFX_H; y++) {
       for (let x = 0; x < GFX_W; x++) {
-        const [r, gr, b] = VGA_PALETTE[g.pixels[y * GFX_W + x]];
+        const [r, gr, b] = g.rgb(g.pixels[y * GFX_W + x]);
         for (let dy = 0; dy < 2; dy++) {
           let p = ((BORDER + y * 2 + dy) * SRC_W + BORDER + x * 2) * 4;
           for (let dx = 0; dx < 2; dx++, p += 4) {

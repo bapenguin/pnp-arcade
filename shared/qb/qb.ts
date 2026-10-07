@@ -4,11 +4,11 @@
 //   qb.cls(); qb.print('JIMMY ENTERS THE HALL PRESS'); const move = await qb.input();
 //
 // PRINT, CLS, COLOR, LOCATE and TAB are immediate; INPUT, SLEEP, PLAY and the key reads
-// are awaited. SCREEN 13 switches PRINT and friends to the graphics screen (`gfx`).
+// are awaited. SCREEN 1 and 13 switch PRINT and friends to the graphics screen (`gfx`).
 
 import { cp437Byte } from './cp437';
 import type { Glyphs } from './font';
-import { Gfx13 } from './gfx';
+import { Gfx } from './gfx';
 import type { Clock } from './clock';
 import type { KeyBuffer } from './keys';
 import type { Synth } from './play';
@@ -26,9 +26,9 @@ export class QB {
   waiting: Waiting = 'run';
   /** Called whenever `waiting` changes. */
   onWait: (w: Waiting) => void = () => {};
-  /** The SCREEN 13 graphics screen while it's showing, else null (text mode). */
-  gfx: Gfx13 | null = null;
-  /** Set by the host: the 8x8 font for SCREEN 13. */
+  /** The graphics screen (SCREEN 1 or 13) while it's showing, else null (text mode). */
+  gfx: Gfx | null = null;
+  /** Set by the host: the 8x8 font for the graphics screens. */
   glyphs8: Glyphs | null = null;
 
   constructor(
@@ -63,7 +63,8 @@ export class QB {
   }
 
   color(fore?: number, back?: number, border?: number): void {
-    if (this.gfx) this.gfx.color(fore);
+    // In SCREEN 1 the two arguments are the background colour and the palette.
+    if (this.gfx) this.gfx.color(fore, back);
     else this.screen.color(fore, back, border);
   }
 
@@ -72,10 +73,10 @@ export class QB {
     else this.screen.locate(row, col);
   }
 
-  /** SCREEN 13 or SCREEN 0. Either way the screen starts blank, as on the PC. */
-  setScreen(mode: 0 | 13): void {
-    if (mode === 13) {
-      this.gfx = new Gfx13(this.glyphs8!);
+  /** SCREEN 0, 1 or 13. Whichever it is, the screen starts blank, as on the PC. */
+  setScreen(mode: 0 | 1 | 13): void {
+    if (mode) {
+      this.gfx = new Gfx(this.glyphs8!, mode);
     } else {
       this.gfx = null;
       this.screen.color(7, 0, 0);
