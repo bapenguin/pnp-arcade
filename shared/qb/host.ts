@@ -29,7 +29,7 @@ export interface HostOptions {
 }
 
 // "press 1 to attack", "PRESS 1. TO SEARCH", "Prees 2 to talk", "press X to go down"
-const PRESS = /\bpre+ss\s+([0-9a-z])\b/i;
+const PRESS = /\bpre+s+\s+([0-9a-z])\b/i;
 // "1) Sell", "   2) Crossbow......$200"
 const NUMBERED = /^\s*([0-9])\)/;
 // "1 - attack", " 5- Earthquake", " 12 -poffite" (but not an empty " 3 - " item slot)
@@ -277,14 +277,21 @@ export class Host {
 
   /**
    * The menu lines for the question being asked: those printed since the previous
-   * answer (a line starting "?"), so an older menu still on screen doesn't count.
+   * answer (a line starting "?"), so an older menu still on screen doesn't count. Answers
+   * straight above the prompt are skipped first: a blank or wrong answer asks again on
+   * the next line, and the same menu still applies.
    */
   private menuLines(): { row: number; key: string; text: string }[] {
     const found: { row: number; key: string; text: string }[] = [];
     if (this.qb.gfx) return found;
+    let retries = true;
     for (let row = this.screen.row - 1; row >= 1; row--) {
       const text = this.screen.rowText(row);
-      if (text.startsWith('?')) break;
+      if (text.startsWith('?')) {
+        if (retries) continue;
+        break;
+      }
+      retries = false;
       const m = PRESS.exec(text) ?? NUMBERED.exec(text) ?? DASHED.exec(text) ?? LETTER_TO.exec(text) ?? FOR_MORE.exec(text);
       if (m) found.unshift({ row, key: m[1].toUpperCase(), text: text.trim() });
       if (YES_NO.test(text)) found.push({ row: 0, key: 'Y', text }, { row: 0, key: 'N', text });
