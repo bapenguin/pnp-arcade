@@ -31,8 +31,17 @@ mode. It's on the hub as TERM-02, and the details are in `games/jimmy1/PLAN.md`.
 - browser saves with autosave
 
 The runtime gained graphics, `inkey`, clips and numeric input. It's on the hub as
-TERM-03. **Next: J7, the missing story.** `games/jimmyx/PLAN.md` has a draft outline and
-questions for Nick.
+TERM-03.
+
+**Jimmy X's story is finished (2026-10-07): J7 is done.** The new content covers:
+- Bestaw the hermit (from Jimmy 2)
+- Snootsburg and its mayor
+- Bob's army camp
+- Bob, beaten with Jimmy 1's blinding trick
+- an ending
+- the Regelt Colosseum, for levelling up
+
+`games/jimmyx/PLAN.md` has the details. Next up is Jimmy 2.
 
 ---
 

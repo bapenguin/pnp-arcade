@@ -23,7 +23,25 @@ export interface Save {
   armor: number;
   shield: number;
   ittoms: number[];
+  /** New-content progress (absent in saves made before it existed). */
+  story?: Story;
 }
+
+/** Progress through the new content (J7). */
+export interface Story {
+  /** 0 = hasn't got in, 1 = got in (won the number game), 2 = learned Blind. */
+  hermit: number;
+  /** The mayor's pass to Bob's gate. */
+  pass: number;
+  /** Through Bob's gate (with the pass, or past the captain). */
+  gate: number;
+  /** Raided the camp's supply tent. */
+  supplies: number;
+  /** Won the Colosseum's grand prize. */
+  prize: number;
+}
+
+export const newStory = (): Story => ({ hermit: 0, pass: 0, gate: 0, supplies: 0, prize: 0 });
 
 interface Store {
   v: 1;

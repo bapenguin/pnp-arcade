@@ -17,7 +17,7 @@ A browser arcade of games Nick Puleo and David Paul (P&P Enterprises) made in th
 | `index.html`, `assets/` | The hub: plain HTML, no build. `assets/` is made by `npm run hub-assets` from `art/` |
 | `games/mof/` | Massacre of the Fairies (TypeScript + Vite), imported with full history via `git subtree`. Its own `package.json`; it builds and plays on its own |
 | `games/jimmy1/` | Jimmy (1994), ported to TypeScript on the shared QB runtime. Its own `package.json`, `PLAN.md` (changes from the original) and `CLAUDE.md` |
-| `games/jimmyx/` | Jimmy X, the QuickBASIC RPG, on the same runtime. Its own `package.json`, `PLAN.md` (changes, balance, the J7 story draft) and `CLAUDE.md`. Its sound clips are converted by `npm run sounds` |
+| `games/jimmyx/` | Jimmy X, the QuickBASIC RPG, on the same runtime. Its own `package.json`, `PLAN.md` (changes, balance, the new J7 story content) and `CLAUDE.md`. Its sound clips are converted by `npm run sounds` |
 | `games/jimmy2/` | Jimmy 2. Only `legacy/` so far (the original source, read-only) |
 | `shared/qb/` | The QuickBASIC text-mode runtime the Jimmy ports share: screen, VGA font, INPUT/SLEEP/PLAY, phone controls. See its `README.md` |
 | `art/` | Full-size source art, not deployed: `brand/` (logos, the 2000s banner), `comic/` (*Star Detours* scans, 1993 originals + 2005 restorations) |

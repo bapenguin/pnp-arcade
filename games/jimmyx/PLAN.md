@@ -3,12 +3,13 @@
 *Jimmy X: "the next generation in the Jimmy line of games"*, by Nick Puleo and David Paul
 (P&P), mid-1990s. The main menu calls it *Memories.. and other stuff I remember*. It's a
 menu-driven RPG: Jimmy wanders a small land, fights timed battles, buys weapons, armor,
-magic and potions, and levels up. The goal is to destroy Bob, who never appears (see
-J7 below).
+magic and potions, and levels up. The goal is to destroy Bob. In the original he never
+appears; the port adds him (J7 below).
 
-**Status, 2026-10-06:**
-- **Done (J1-J6):** the original is ported and playable, with saves.
-- **Next (J7):** the missing story, waiting on your input.
+**Status:**
+- **2026-10-06:** the original is ported and playable, with saves (J1-J6).
+- **2026-10-07:** new content finishes the story: the hermit, the rich side, Bob's army,
+  Bob, the ending and an arena (J7).
 
 ## The original
 
@@ -129,10 +130,11 @@ Each is marked "The original…" in `src/`.
   `MYDAY.VOC`'s steps lean upwards, so a clamped decode climbs into the ceiling. It's
   decoded unclamped, the drift is filtered out (a 40 Hz high-pass), and the level is
   normalised.
-- **Used by the game:** `myday`, `backoff`, `meanswar` (encounters), `ouch` (death),
+- **Used by the original:** `myday`, `backoff`, `meanswar` (encounters), `ouch` (death),
   `thankyou` (shops), `hello` + `army` (the elf), `toll`.
-- **Unused, available for J7:** `hermit`, `quick`, `crushed`, `clothes`, `gun`, `arty`,
-  `fart`, `intro`, `beavhuh1`, `butthuh1`, `snd07`, `shoot`.
+- **Used by the new content (J7):** `hermit`, `crushed` (Bob), `gun`, `fart`, `arty`
+  (Bob's camp), `beavhuh1`, `butthuh1` (the gate captain).
+- **Still unused:** `quick`, `clothes`, `intro`, `snd07`, `shoot`.
 
 ## Balance (simulated, always attacking, 4,000 fights each)
 
@@ -147,31 +149,70 @@ Running always works, so a fresh Jimmy survives by running from the orangutan an
 bearded lady in the starting field. The claw from the cave is the big jump. J7's new
 enemies (and Bob) need to be tuned against these numbers.
 
-## J7: finishing the story (draft, for review)
+## J7: the new content (2026-10-07)
 
-The original sets up Bob and never delivers him: the elf's rumour, the toll road to "the
-rich part of the land", and a hermit whose clip (`HERMIT.VOC`, 17 s) was recorded but never
-used. Here's an outline to react to. The writing should sound like you two, so treat
-every line here as a placeholder.
+The original set Bob up and never delivered him: the elf's rumour, a toll road to "the
+rich part of the land" that went nowhere, and a hermit whose clip (`HERMIT.VOC`) was
+recorded but never used. Nick didn't remember any plans, so the gaps were filled from
+the three games' own material, in their voice. Every new block is marked "New (J7)" in
+`src/`.
 
-1. **The hermit (room 19).** Plays `HERMIT.VOC`. He knew Jimmy from Jimmy 2's temple and
-   says Bob survived the sword. Bob's army camps past the rich side of the land, and only
-   the *Dragons Sword* (or a trusted army) can get through its gate. He sells the last
-   spell lesson, finally making the guild's "magic lesson" do something.
-2. **The rich side (room 18).** A walled town with a pricier shop tier (the Dragons Sword
-   and Cannon), a bank (`QUICK.VOC`?), and the gate to Bob's camp, guarded by a captain.
-3. **Bob's camp (2-3 new rooms).** New enemies (soldiers, a war machine with `ARTY.VOC` and
-   `GUN.VOC`), tuned so a level 5-6 Jimmy with good gear wins about 70% of the time.
-4. **Bob.** The boss fight, in the same timed-battle style, with a twist from the Jimmy 1
-   ending (he disappears and must be found).
-5. **The ending.** A `SCREEN 13` sequence like the intro ("The first one's second sequal's
-   ending"?), then credits.
+**Callbacks used**
+- **Jimmy 1:** Bob "disapears" when Jimmy lunges, and is beaten by blinding him ("Jimmy
+  learned how to make his oppenent go blind"). Bob's weapon is "lightning bolt magic".
+  Other lines: "ALLLLRIGGHTY- then", "Will that be cash or an American Express Card?",
+  "You don't HAVE a … genius".
+- **Jimmy 2:**
+  - the hermit is BESTAW/BASTEW, who Jimmy was sent to with the statue of FORGON
+  - his door is Jimmy 2's guess-the-number game, with its lines ("Nup, It's higher than
+    that!", "Lower, like lower than dirt", "You lose the numdber was")
+  - Puleo's Pulverizer and Paul's Armor return
+- **Jimmy X:**
+  - the three shields the original named but never sold
+  - COLOR 14 for the rich side (the one thing the original's `rich:` did)
+  - `JIMMY.INS`'s "universal badguy"
+- **Endings:** the ending closes like Jimmy 1's, with "LOOK FOR JIMMY 4!" (Jimmy X was
+  "the third one").
 
-**Open questions for you:**
-- Did you two plan anything for Bob's army, the rich side, or the hermit back then?
-- Should "go South/East" from Regelt lead somewhere new?
-- Should the raptor claw stay a free gift in the cave? It makes everything after it easy.
-  Moving it behind the stone giant would keep the original's fun but add a fight.
+**Where it is**
+
+| Room | What |
+|---|---|
+| 19 Bestaw's hut (creek, "knock") | The number game to get in (once), then a story dump: Bob survived ("You got that sword from a guy in a bar who VANISHED"). Bring him a mega poffite (the guild sells them) and he teaches **Blind** (spell 6, 10 Mp) |
+| 18 Snootsburg (past the toll) | The rich side. A shield shop (24), Ye Olde Overpriced Armor (25: Gold Plated $4000, Paul's Armor $15000), the mayor (26), north to the gate. Going back down the toll road is free ("Rich people logic") |
+| 26 The mayor | Signs the pass to Bob's gate for a level-4+ Jimmy, or for a $5000 donation to the Mayor's Hat Fund |
+| 20 Bob's gate | The pass gets Jimmy in; so does beating the Gate Captain (level 5). Plays `BEAVHUH1`/`BUTTHUH1` (the captain laughing) |
+| 21 Bob's camp | Random fights with Bob's Soldier (`GUN`), Bob's Cook (`FART`), the War Machine (`ARTY`) and Lieutenant Steve. A supply tent with six potions and $500, once |
+| 22 Bob's tent | Bob's speech, then the fight. He can't be hit (even by spells) until he's blinded, and has a 1 in 4 chance each round to rub his eyes. Running goes back to the camp. Plays `CRUSHED` |
+| 23 The Regelt Colosseum (Regelt SW, "go South") | For levelling up: four tiers (Rookie $10 … Legend $1000) of the existing enemies plus Bob's soldiers. Losing drags Jimmy out with 1 Hp instead of killing him. The first Legend win awards **Puleo's Pulverizer** (strength 180) |
+
+After Bob, the ending is a `SCREEN 13` sequence ("BOB is dead. Again. No, really this
+time. Probably."), then the logo and credits. The game then clears its autosave and goes
+back to the menu.
+
+**Balance** (simulated with the same rolls, `tools`-free: see the Testing section):
+
+| Jimmy vs Bob (strength 160, defense 145, 900 Hp) | No potions | 3 potions | 6 potions |
+|---|---|---|---|
+| Level 5, claw + Gold Plated + Cast Iron | 0% | 3% | 18% |
+| Level 5, claw + Gold Plated + Magical | 14% | 57% | 89% |
+| Level 5, claw + Paul's Armor + Magical | 99% | 100% | 99% |
+| Level 6, claw + Iron Armor | 39% | 78% | 96% |
+| Level 6, claw + Gold Plated + Cast Iron | 100% | 100% | 100% |
+
+Bob's army: the soldiers and the cook are easy at level 4 with the claw; the captain and
+the War Machine want level 5; Lieutenant Steve is in between. The arena is the way to
+reach level 6, or to earn Paul's Armor.
+
+**Decided by Nick:** the raptor claw stays a free gift in the cave. Regelt's "go East"
+still leads nowhere, as in the original.
+
+**For Nick to check:** the unused clips' contents were unknown when they were assigned:
+- `CRUSHED` for Bob
+- `GUN`, `FART`, `ARTY` for the camp
+- `BEAVHUH1`/`BUTTHUH1` for the captain
+
+If one doesn't fit, swap it in `src/data.ts` (the `clip` field) or `gate()`.
 
 ## Testing
 

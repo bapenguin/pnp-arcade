@@ -2,7 +2,7 @@
 
 The QuickBASIC RPG, ported onto the shared QB runtime (`../../shared/qb/`, see its
 README). `PLAN.md` has the original's structure, the map, every deliberate change, the
-battle odds and the J7 story draft. Read it before changing behaviour.
+battle odds and the new story content (J7: everything marked "New (J7)" in `src/`). Read it before changing behaviour.
 
 **Layout**
 - `src/jimmyx.ts` mirrors `legacy/JIMMYX.BAS`: one method per room or menu label, with the
