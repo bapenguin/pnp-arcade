@@ -13,10 +13,13 @@ const brand = path.join(root, 'art', 'brand');
 const out = path.join(root, 'assets');
 fs.mkdirSync(out, { recursive: true });
 
-// The electric banner for the hub header, in two widths for phones and desktops.
-for (const w of [800, 1600]) {
-  await sharp(path.join(brand, 'pnp-banner.png')).resize({ width: w }).webp({ quality: 82 }).toFile(path.join(out, `pnp-banner-${w}.webp`));
+// The animated electric banner for the hub header, as animated WebP (a fraction of the
+// GIF's size) in two widths for phones and desktops, plus a still for reduced motion.
+const banner = path.join(brand, 'pnp-banner-animated.gif');
+for (const w of [768, 1536]) {
+  await sharp(banner, { animated: true }).resize({ width: w }).webp({ quality: 55, effort: 6 }).toFile(path.join(out, `pnp-banner-${w}.webp`));
 }
+await sharp(banner, { page: 0 }).resize({ width: 1536 }).webp({ quality: 82 }).toFile(path.join(out, 'pnp-banner-still.webp'));
 
 // Icons from the square logo: the transparent background keeps the glow.
 for (const s of [32, 180, 192, 512]) {
